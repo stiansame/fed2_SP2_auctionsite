@@ -1,22 +1,41 @@
-// /js/state.js
-import { apiGet } from "./api.js";
-
-const KEY = "auction_auth";
+// ./js/state.js
+const KEY = "auction_auth_v2";
 
 export function getAuth() {
-  const raw = localStorage.getItem(KEY);
-  if (!raw) return { isLoggedIn: false, user: null, token: null, credit: null };
-  const parsed = JSON.parse(raw);
-  return {
-    isLoggedIn: !!parsed?.token,
-    user: parsed?.user ?? null,
-    token: parsed?.token ?? null,
-    credit: parsed?.credit ?? null,
-  };
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) {
+      return { isLoggedIn: false, token: null, user: null, credit: null };
+    }
+
+    const parsed = JSON.parse(raw);
+    const token = parsed?.token || null;
+    const user = parsed?.user || null;
+    const credit = parsed?.credit ?? null;
+
+    return {
+      isLoggedIn: Boolean(token),
+      token,
+      user,
+      credit,
+    };
+  } catch (e) {
+    console.warn("Auth storage corrupted. Clearing.", e);
+    localStorage.removeItem(KEY);
+    return { isLoggedIn: false, token: null, user: null, credit: null };
+  }
 }
 
 export function setAuth({ token, user }) {
-  localStorage.setItem(KEY, JSON.stringify({ token, user, credit: null }));
+  if (!token) throw new Error("setAuth called without token");
+  localStorage.setItem(
+    KEY,
+    JSON.stringify({
+      token,
+      user: user ?? null,
+      credit: null,
+    }),
+  );
 }
 
 export function setCredit(credit) {
@@ -24,7 +43,11 @@ export function setCredit(credit) {
   if (!auth.token) return;
   localStorage.setItem(
     KEY,
-    JSON.stringify({ token: auth.token, user: auth.user, credit }),
+    JSON.stringify({
+      token: auth.token,
+      user: auth.user,
+      credit,
+    }),
   );
 }
 
@@ -32,13 +55,17 @@ export function logout() {
   localStorage.removeItem(KEY);
 }
 
+/**
+ * Optional helper: fetch and store updated credit (depends on your API response shape)
+ */
+import { apiGet } from "./api.js";
 export async function maybeRefreshCredit() {
   const auth = getAuth();
   if (!auth.isLoggedIn || !auth.user?.name) return null;
 
   try {
     const profile = await apiGet(`/profiles/${auth.user.name}`);
-    const credit = profile?.credits ?? profile?.credit ?? null; // depends on API field name
+    const credit = profile?.credits ?? profile?.credit ?? null;
     if (credit !== null) setCredit(credit);
     return credit;
   } catch {

@@ -49,10 +49,25 @@ export async function loginPage({ query, mountEl }) {
     try {
       const res = await apiPost("/auth/login", { email, password });
 
+      // ✅ Handle both response shapes: res or res.data
+      const payload = res?.data ?? res;
+
+      const token = payload?.accessToken || payload?.token;
+      const name = payload?.name;
+      const userEmail = payload?.email ?? email;
+
+      if (!token) {
+        console.log("Login response payload:", res);
+        throw new Error("Login succeeded but no access token was returned.");
+      }
+
       setAuth({
-        token: res.accessToken,
-        user: { name: res.name, email: res.email },
+        token,
+        user: { name, email: userEmail },
       });
+
+      // Debug: confirm it wrote
+      console.log("Stored auth:", localStorage.getItem("auction_auth_v2"));
 
       const credit = await maybeRefreshCredit();
       renderHeader({ credit });
