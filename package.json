@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/stiansame/fed2_SP2_auctionsite#readme",
   "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19"
   }
 }
