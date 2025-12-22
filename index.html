@@ -5,171 +5,129 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Browse and bid on student auction listings." />
-    <title>Auction | Home</title>
+    <title>Noroff Auctionsite | Home</title>
 
-    <!-- Tailwind (PostCSS output) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
+
     <link rel="stylesheet" href="./css/style.css" />
-
-    <!-- Favicon (optional placeholder) -->
     <link rel="icon" href="data:," />
 </head>
 
-<body class="min-h-screen bg-gray-50 text-gray-900">
-    <!-- Skip link (accessibility) -->
+<body>
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:shadow">
         Skip to content
     </a>
 
-    <!-- Header (rendered dynamically by JS) -->
-    <header id="site-header" class="sticky top-0 z-40 border-b bg-white/90 backdrop-blur"></header>
+    <header id="site-header" class="site-header"></header>
 
-    <!-- Main content -->
-    <main id="app" class="mx-auto max-w-6xl px-4 py-6">
-        <!-- Page intro -->
-        <section class="mb-6">
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                    <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">
-                        Live listings
-                    </h1>
-                    <p class="mt-1 text-sm text-gray-600">
-                        Browse auctions, view bids, and log in to place your own bids.
-                    </p>
-                </div>
-
-                <!-- Quick links (safe even before JS runs) -->
-                <div class="flex items-center gap-2">
-                    <a href="#/create" class="rounded-md border bg-white px-3 py-2 text-sm font-medium hover:bg-gray-50" title="Requires login">
-                        Create listing
-                    </a>
-                    <a href="#/profile" class="rounded-md border bg-white px-3 py-2 text-sm font-medium hover:bg-gray-50" title="Requires login">
-                        Profile
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Search & filters -->
-        <section class="mb-6 rounded-xl border bg-white p-4 shadow-sm">
-            <form id="searchForm" class="grid gap-3 md:grid-cols-12 md:items-end" autocomplete="off">
-                <div class="md:col-span-6">
-                    <label for="searchInput" class="block text-sm font-medium">
-                        Search listings
-                    </label>
-                    <div class="mt-1 flex gap-2">
-                        <input id="searchInput" name="q" type="search" placeholder="Try “camera”, “bike”, “vintage”…"
-                            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900" />
-                        <button type="submit" class="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-black">
-                            Search
-                        </button>
+    <main id="main" class="container-page py-6">
+        <!-- HOME VIEW -->
+        <div id="homeView">
+            <section class="mb-6">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <h1>Live listings</h1>
+                        <p>Browse auctions, view bids, and log in to place your own bids.</p>
                     </div>
-                    <p class="mt-1 text-xs text-gray-500">
-                        Guests can browse and search. Log in to bid.
-                    </p>
+
+                    <div class="flex items-center gap-2">
+                        <a href="#/create" class="btn-secondary" title="Requires login">Create listing</a>
+                        <a href="#/profile" class="btn-secondary" title="Requires login">Profile</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-6 card card-pad">
+                <form id="searchForm" class="grid gap-3 md:grid-cols-12 md:items-end" autocomplete="off">
+                    <div class="md:col-span-6">
+                        <label for="searchInput">Search listings</label>
+                        <div class="mt-1 flex gap-2">
+                            <input id="searchInput" name="q" type="search" placeholder="Try “camera”, “bike”, “vintage”…" />
+                            <button type="submit" class="btn-primary">Search</button>
+                        </div>
+                        <small>Guests can browse and search. Log in to bid.</small>
+                    </div>
+
+                    <div class="md:col-span-3">
+                        <label for="sortSelect">Sort</label>
+                        <select id="sortSelect" name="sort">
+                            <option value="created_desc" selected>Newest</option>
+                            <option value="ends_asc">Ending soon</option>
+                            <option value="bids_desc">Most bids</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-3">
+                        <label for="statusSelect">Status</label>
+                        <select id="statusSelect" name="status">
+                            <option value="all" selected>All</option>
+                            <option value="active">Active only</option>
+                            <option value="ended">Ended</option>
+
+                        </select>
+                    </div>
+                </form>
+            </section>
+
+            <section id="feedback" class="mb-6 hidden alert-danger">
+                <div class="flex items-start justify-between gap-4">
+                    <p id="feedbackText" class="text-red-900">Something went wrong.</p>
+                    <button id="feedbackDismiss" type="button" class="btn-secondary">Dismiss</button>
+                </div>
+            </section>
+
+            <section aria-label="Listings">
+                <div id="listingsLoading" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <div class="card card-pad animate-pulse">
+                        <div class="h-32 rounded-lg bg-slate-200"></div>
+                        <div class="mt-4 h-4 w-3/4 rounded bg-slate-200"></div>
+                        <div class="mt-2 h-4 w-1/2 rounded bg-slate-200"></div>
+                    </div>
+                    <div class="card card-pad animate-pulse">
+                        <div class="h-32 rounded-lg bg-slate-200"></div>
+                        <div class="mt-4 h-4 w-3/4 rounded bg-slate-200"></div>
+                        <div class="mt-2 h-4 w-1/2 rounded bg-slate-200"></div>
+                    </div>
+                    <div class="hidden lg:block card card-pad animate-pulse">
+                        <div class="h-32 rounded-lg bg-slate-200"></div>
+                        <div class="mt-4 h-4 w-3/4 rounded bg-slate-200"></div>
+                        <div class="mt-2 h-4 w-1/2 rounded bg-slate-200"></div>
+                    </div>
                 </div>
 
-                <div class="md:col-span-3">
-                    <label for="sortSelect" class="block text-sm font-medium">
-                        Sort
-                    </label>
-                    <select id="sortSelect" class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900">
-                        <option value="created_desc" selected>Newest</option>
-                        <option value="ends_asc">Ending soon</option>
-                        <option value="bids_desc">Most bids</option>
-                    </select>
+                <div id="listingsGrid" class="hidden grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+                <div id="listingsEmpty" class="hidden card card-pad text-center">
+                    <h2>No listings found</h2>
+                    <p>Try a different search or clear filters.</p>
+                    <div class="mt-4 flex justify-center gap-2">
+                        <button id="clearSearchBtn" type="button" class="btn-secondary">Clear search</button>
+                        <a href="#/create" class="btn-primary">Create listing</a>
+                    </div>
                 </div>
+            </section>
 
-                <div class="md:col-span-3">
-                    <label for="statusSelect" class="block text-sm font-medium">
-                        Status
-                    </label>
-                    <select id="statusSelect" class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900">
-                        <option value="active" selected>Active only</option>
-                        <option value="all">All</option>
-                        <option value="ended">Ended</option>
-                    </select>
-                </div>
-            </form>
-        </section>
+            <section id="pagination" class="mt-8 hidden items-center justify-between">
+                <button id="prevPageBtn" class="btn-secondary" disabled>← Previous</button>
+                <p class="text-sm text-brand-muted">Page <span id="pageNumber">1</span></p>
+                <button id="nextPageBtn" class="btn-secondary" disabled>Next →</button>
+            </section>
+        </div>
 
-        <!-- Feedback / error messages -->
-        <section id="feedback" class="mb-6 hidden rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900">
-            <div class="flex items-start justify-between gap-4">
-                <p id="feedbackText">Something went wrong.</p>
-                <button id="feedbackDismiss" type="button" class="rounded-md border border-red-200 bg-white px-3 py-1 text-xs font-medium hover:bg-red-50">
-                    Dismiss
-                </button>
-            </div>
-        </section>
-
-        <!-- Listings -->
-        <section aria-label="Listings">
-            <!-- Loading skeleton -->
-            <div id="listingsLoading" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <div class="h-56 animate-pulse rounded-xl border bg-white p-4 shadow-sm">
-                    <div class="h-32 rounded-lg bg-gray-200"></div>
-                    <div class="mt-4 h-4 w-3/4 rounded bg-gray-200"></div>
-                    <div class="mt-2 h-4 w-1/2 rounded bg-gray-200"></div>
-                </div>
-                <div class="h-56 animate-pulse rounded-xl border bg-white p-4 shadow-sm">
-                    <div class="h-32 rounded-lg bg-gray-200"></div>
-                    <div class="mt-4 h-4 w-3/4 rounded bg-gray-200"></div>
-                    <div class="mt-2 h-4 w-1/2 rounded bg-gray-200"></div>
-                </div>
-                <div class="hidden h-56 animate-pulse rounded-xl border bg-white p-4 shadow-sm lg:block">
-                    <div class="h-32 rounded-lg bg-gray-200"></div>
-                    <div class="mt-4 h-4 w-3/4 rounded bg-gray-200"></div>
-                    <div class="mt-2 h-4 w-1/2 rounded bg-gray-200"></div>
-                </div>
-            </div>
-
-            <!-- Listings grid -->
-            <div id="listingsGrid" class="hidden grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
-
-            <!-- Empty state -->
-            <div id="listingsEmpty" class="hidden rounded-xl border bg-white p-8 text-center shadow-sm">
-                <h2 class="text-lg font-semibold">No listings found</h2>
-                <p class="mt-2 text-sm text-gray-600">
-                    Try a different search or clear filters.
-                </p>
-                <div class="mt-4 flex justify-center gap-2">
-                    <button id="clearSearchBtn" type="button" class="rounded-md border bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50">
-                        Clear search
-                    </button>
-                    <a href="#/create" class="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-black">
-                        Create listing
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Pagination (optional) -->
-        <section id="pagination" class="mt-8 hidden items-center justify-between">
-            <button id="prevPageBtn" class="rounded-md border bg-white px-3 py-2 text-sm font-medium hover:bg-gray-50 disabled:opacity-50" disabled>
-                ← Previous
-            </button>
-
-            <p class="text-sm text-gray-600">
-                Page <span id="pageNumber">1</span>
-            </p>
-
-            <button id="nextPageBtn" class="rounded-md border bg-white px-3 py-2 text-sm font-medium hover:bg-gray-50 disabled:opacity-50" disabled>
-                Next →
-            </button>
-        </section>
+        <!-- APP VIEW (routed pages render here) -->
+        <div id="appView" class="hidden"></div>
     </main>
 
-    <!-- Footer -->
     <footer class="border-t bg-white">
-        <div class="mx-auto max-w-6xl px-4 py-6 text-sm text-gray-600">
+        <div class="container-page py-6 text-sm text-brand-muted">
             Built for the Noroff Auction API — front-end only.
         </div>
     </footer>
 
-    <!-- JS entry point (NO src folder) -->
     <script type="module" src="./js/app.js"></script>
 
-    <!-- Small helper for dismissing feedback -->
     <script>
         (function () {
             const btn = document.getElementById("feedbackDismiss");

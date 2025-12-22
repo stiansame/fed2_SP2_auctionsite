@@ -1,3 +1,152 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* =========================
+   Base (site-wide defaults)
+   ========================= */
+@layer base {
+  html {
+    font-family: theme(fontFamily.sans);
+    background-color: theme(colors.brand.bg);
+    color: theme(colors.brand.ink);
+  }
+
+  body {
+    @apply min-h-screen;
+  }
+
+  /* Headings */
+  h1 {
+    @apply font-heading text-3xl font-semibold tracking-tight;
+  }
+
+  h2 {
+    @apply font-heading text-2xl font-semibold tracking-tight;
+  }
+
+  h3 {
+    @apply font-heading text-xl font-semibold;
+  }
+
+  /* Text */
+  p {
+    @apply text-sm leading-relaxed text-brand-muted;
+  }
+
+  small {
+    @apply text-xs text-brand-muted;
+  }
+
+  /* Links */
+  a {
+    @apply text-brand-accent hover:underline;
+  }
+
+  /* Form defaults */
+  label {
+    @apply text-sm font-medium text-brand-ink;
+  }
+
+  input,
+  select,
+  textarea {
+    @apply w-full rounded-md border border-brand-border bg-white px-3 py-2 text-sm text-brand-ink outline-none focus:border-brand-ink;
+  }
+
+  ::placeholder {
+    color: theme(colors.brand.muted);
+    opacity: 0.7;
+  }
+}
+
+/* =========================
+   Components (reusable UI)
+   ========================= */
+@layer components {
+  /* Surfaces */
+  .container-page {
+    @apply mx-auto max-w-6xl px-4;
+  }
+
+  .card {
+    @apply rounded-xl border border-brand-border bg-brand-surface shadow-soft;
+  }
+
+  .card-pad {
+    @apply p-4 sm:p-5;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-brand-primary text-white hover:bg-black;
+  }
+
+  .btn-secondary {
+    @apply btn border border-brand-border bg-white text-brand-ink hover:bg-slate-50;
+  }
+
+  .btn-accent {
+    @apply btn bg-brand-accent text-white hover:bg-blue-700;
+  }
+
+  .btn-danger {
+    @apply btn bg-state-danger text-white hover:bg-red-700;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium;
+  }
+
+  .badge-neutral {
+    @apply badge bg-slate-100 text-slate-700;
+  }
+
+  .badge-accent {
+    @apply badge bg-blue-50 text-blue-700;
+  }
+
+  .badge-success {
+    @apply badge bg-green-50 text-green-700;
+  }
+
+  .badge-warning {
+    @apply badge bg-amber-50 text-amber-700;
+  }
+
+  .badge-danger {
+    @apply badge bg-red-50 text-red-700;
+  }
+
+  /* Alerts */
+  .alert {
+    @apply rounded-xl border p-4 text-sm;
+  }
+
+  .alert-danger {
+    @apply alert border-red-200 bg-red-50 text-red-900;
+  }
+
+  .alert-info {
+    @apply alert border-slate-200 bg-slate-50 text-slate-900;
+  }
+
+  /* Header */
+  .site-header {
+    @apply sticky top-0 z-40 border-b border-brand-border bg-white/90 backdrop-blur;
+  }
+}
+
+/* =========================
+   Utilities (tiny helpers)
+   ========================= */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

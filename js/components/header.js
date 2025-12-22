@@ -7,30 +7,35 @@ export function renderHeader({ credit = null } = {}) {
   const { isLoggedIn, user } = getAuth();
 
   header.innerHTML = `
-    <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-3">
-      <a href="#/" class="font-semibold text-lg">Auction</a>
+    <div class="container-page py-3 flex items-center justify-between gap-3">
+      <a href="#/" class="font-heading text-lg font-semibold tracking-tight text-brand-ink">
+        Noroff Auctionsite
+      </a>
 
-      <div class="flex items-center gap-2">
+      <nav class="flex items-center gap-2" aria-label="Primary navigation">
         ${
           !isLoggedIn
             ? `
-              <a href="#/login" class="px-3 py-2 rounded-md border">Login</a>
-              <a href="#/register" class="px-3 py-2 rounded-md bg-black text-white">Register</a>
+              <a href="#/login" class="btn-secondary">Login</a>
+              <a href="#/register" class="btn-primary">Register</a>
             `
             : `
-              <span class="px-3 py-2 rounded-full bg-gray-100 text-sm">
+              <span class="badge-accent" title="Available credits">
                 💰 ${credit ?? "—"}
               </span>
-              <a href="#/create" class="px-3 py-2 rounded-md border">Create listing</a>
-              <a href="#/profile" class="px-3 py-2 rounded-md border">
+
+              <a href="#/create" class="btn-secondary">Create listing</a>
+
+              <a href="#/profile" class="btn-secondary" title="View profile">
                 ${user?.name ?? "Profile"}
               </a>
-              <button id="logoutBtn" class="px-3 py-2 rounded-md bg-black text-white">
+
+              <button id="logoutBtn" type="button" class="btn-primary">
                 Logout
               </button>
             `
         }
-      </div>
+      </nav>
     </div>
   `;
 

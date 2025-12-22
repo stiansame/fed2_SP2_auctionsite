@@ -1,0 +1,88 @@
+// ./js/api.js
+import { API_BASE_URL, AUCTION_PATH } from "./config.js";
+import { getAuth } from "./state.js";
+
+function authHeaders() {
+  const { token } = getAuth();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+function isAuthEndpoint(path) {
+  return path.startsWith("/auth/");
+}
+
+function buildUrl(path) {
+  if (!path.startsWith("/")) path = `/${path}`;
+
+  // Auth endpoints live at root: /auth/login, /auth/register
+  if (isAuthEndpoint(path)) {
+    return `${API_BASE_URL}${path}`;
+  }
+
+  // Everything else is under /auction on v2
+  const fullPath = path.startsWith(AUCTION_PATH)
+    ? path
+    : `${AUCTION_PATH}${path}`;
+  return `${API_BASE_URL}${fullPath}`;
+}
+
+async function parseJsonSafe(res) {
+  const text = await res.text();
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
+function normalizeErrorMessage(status, payload) {
+  if (payload && typeof payload === "object") {
+    if (payload.message) return payload.message;
+    if (payload.error) return payload.error;
+    if (Array.isArray(payload.errors) && payload.errors[0]?.message)
+      return payload.errors[0].message;
+  }
+  return `Request failed (HTTP ${status}).`;
+}
+
+export async function apiRequest(method, path, body = null, options = {}) {
+  const { query = null, headers = {} } = options;
+
+  const url = new URL(buildUrl(path));
+  if (query && typeof query === "object") {
+    for (const [k, v] of Object.entries(query)) {
+      if (v === undefined || v === null || v === "") continue;
+      url.searchParams.set(k, String(v));
+    }
+  }
+
+  const res = await fetch(url.toString(), {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(),
+      ...headers,
+    },
+    body: body ? JSON.stringify(body) : null,
+  });
+
+  const payload = await parseJsonSafe(res);
+
+  if (!res.ok) {
+    const err = new Error(normalizeErrorMessage(res.status, payload));
+    err.status = res.status;
+    err.payload = payload;
+    throw err;
+  }
+
+  return payload;
+}
+
+export const apiGet = (path, options) => apiRequest("GET", path, null, options);
+export const apiPost = (path, body, options) =>
+  apiRequest("POST", path, body, options);
+export const apiPut = (path, body, options) =>
+  apiRequest("PUT", path, body, options);
+export const apiDelete = (path, options) =>
+  apiRequest("DELETE", path, null, options);

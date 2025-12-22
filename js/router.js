@@ -11,10 +11,8 @@ function parseQuery(queryString) {
 }
 
 function matchRoute(path, routePath) {
-  // routePath supports /listing/:id
   const pathParts = path.split("/").filter(Boolean);
   const routeParts = routePath.split("/").filter(Boolean);
-
   if (pathParts.length !== routeParts.length) return null;
 
   const params = {};
@@ -27,6 +25,28 @@ function matchRoute(path, routePath) {
   return params;
 }
 
+function setView(path) {
+  const homeView = document.getElementById("homeView");
+  const appView = document.getElementById("appView");
+
+  // If you haven't added the wrappers yet, fail gracefully.
+  if (!homeView || !appView)
+    return { mountEl: document.getElementById("main") };
+
+  const isHome = path === "/" || path === "";
+
+  if (isHome) {
+    homeView.classList.remove("hidden");
+    appView.classList.add("hidden");
+    appView.innerHTML = ""; // clean old page
+    return { mountEl: null }; // home does not render into appView
+  }
+
+  homeView.classList.add("hidden");
+  appView.classList.remove("hidden");
+  return { mountEl: appView };
+}
+
 export function createRouter(routes) {
   async function handleRoute() {
     const hash = window.location.hash || "#/";
@@ -34,11 +54,14 @@ export function createRouter(routes) {
     const path = rawPath || "/";
     const query = parseQuery(rawQuery);
 
+    // Toggle home vs app view
+    const { mountEl } = setView(path);
+
     for (const r of routes) {
       const params = matchRoute(path, r.path);
       if (!params) continue;
 
-      // Guard
+      // Guard protected routes
       if (r.protected) {
         const { isLoggedIn } = getAuth();
         if (!isLoggedIn) {
@@ -48,11 +71,11 @@ export function createRouter(routes) {
         }
       }
 
-      await r.view({ params, query, path });
+      // Render
+      await r.view({ params, query, path, mountEl });
       return;
     }
 
-    // fallback
     navigate("/");
   }
 
