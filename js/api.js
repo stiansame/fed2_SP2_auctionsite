@@ -1,10 +1,15 @@
 // ./js/api.js
-import { API_BASE_URL, AUCTION_PATH } from "./config.js";
+import { API_BASE_URL, AUCTION_PATH, NOROFF_API_KEY } from "./config.js";
 import { getAuth } from "./state.js";
 
 function authHeaders() {
   const { token } = getAuth();
   return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+function apiKeyHeaders() {
+  // Only add if present; if missing, Noroff will return "No API key header was found".
+  return NOROFF_API_KEY ? { "X-Noroff-API-Key": NOROFF_API_KEY } : {};
 }
 
 function isAuthEndpoint(path) {
@@ -40,8 +45,9 @@ function normalizeErrorMessage(status, payload) {
   if (payload && typeof payload === "object") {
     if (payload.message) return payload.message;
     if (payload.error) return payload.error;
-    if (Array.isArray(payload.errors) && payload.errors[0]?.message)
+    if (Array.isArray(payload.errors) && payload.errors[0]?.message) {
       return payload.errors[0].message;
+    }
   }
   return `Request failed (HTTP ${status}).`;
 }
@@ -61,7 +67,8 @@ export async function apiRequest(method, path, body = null, options = {}) {
     method,
     headers: {
       "Content-Type": "application/json",
-      ...authHeaders(),
+      ...apiKeyHeaders(), // ✅ required by Noroff v2
+      ...authHeaders(), // ✅ bearer token when logged in
       ...headers,
     },
     body: body ? JSON.stringify(body) : null,

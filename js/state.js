@@ -59,16 +59,25 @@ export function logout() {
  * Optional helper: fetch and store updated credit (depends on your API response shape)
  */
 import { apiGet } from "./api.js";
+
 export async function maybeRefreshCredit() {
   const auth = getAuth();
   if (!auth.isLoggedIn || !auth.user?.name) return null;
 
   try {
-    const profile = await apiGet(`/profiles/${auth.user.name}`);
-    const credit = profile?.credits ?? profile?.credit ?? null;
-    if (credit !== null) setCredit(credit);
-    return credit;
-  } catch {
+    const res = await apiGet(`/profiles/${auth.user.name}`);
+
+    // Swagger response: { data: { credits: number }, meta: {} }
+    const credit = res?.data?.credits ?? null;
+
+    if (typeof credit === "number") {
+      setCredit(credit);
+      return credit;
+    }
+
+    return auth.credit ?? null;
+  } catch (err) {
+    console.warn("maybeRefreshCredit failed:", err);
     return auth.credit ?? null;
   }
 }
