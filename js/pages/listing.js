@@ -23,6 +23,7 @@ export async function listingPage({ params, mountEl }) {
     return;
   }
 
+  // Initial skeleton
   mount.innerHTML = `
     <section class="card card-pad">
       <div class="flex items-start justify-between gap-4">
@@ -36,28 +37,31 @@ export async function listingPage({ params, mountEl }) {
   `;
 
   try {
-    const listing = await apiGet(`/listings/${id}`, {
-      query: { _bids: "true", _seller: "true" },
+    // v2: response is { data: { ...listing }, meta: {} }
+    const res = await apiGet(`/listings/${id}`, {
+      query: { _bids: true, _seller: true },
     });
+
+    const listing = res?.data ?? res;
 
     const title = listing?.title ?? "Untitled";
     const description = listing?.description ?? "";
-    const endsAt = listing?.endsAt || listing?.ends_at || listing?.deadline;
+    const endsAt = listing?.endsAt;
     const ended = isEnded(endsAt);
+
     const sellerName =
       listing?.seller?.name ?? listing?.seller?.email ?? "Unknown seller";
 
-    const bids = Array.isArray(listing?.bids)
-      ? listing.bids
-      : Array.isArray(listing?._bids)
-        ? listing._bids
-        : [];
-
+    // Bids: included when _bids=true
+    const bids = Array.isArray(listing?.bids) ? listing.bids : [];
     const current = highestBidAmount({ bids });
 
+    // Media: [{ url, alt }]
     const media = listing?.media;
-    const urls = Array.isArray(media)
-      ? media.map((m) => (typeof m === "string" ? m : m?.url)).filter(Boolean)
+    const mediaItems = Array.isArray(media)
+      ? media
+          .map((m) => (typeof m === "string" ? { url: m, alt: "" } : (m ?? {})))
+          .filter((m) => m.url)
       : [];
 
     const { isLoggedIn, user } = getAuth();
@@ -75,7 +79,12 @@ export async function listingPage({ params, mountEl }) {
       <section class="card card-pad">
         <div class="flex flex-col gap-2">
           <h1>${escapeHtml(title)}</h1>
-          <p>Seller: <span class="text-brand-ink font-medium">${escapeHtml(sellerName)}</span></p>
+          <p>
+            Seller:
+            <span class="text-brand-ink font-medium">
+              ${escapeHtml(sellerName)}
+            </span>
+          </p>
 
           <div class="mt-2 grid gap-3 sm:grid-cols-2">
             <div class="card card-pad">
@@ -84,21 +93,30 @@ export async function listingPage({ params, mountEl }) {
             </div>
             <div class="card card-pad">
               <h3 class="text-base">Highest bid</h3>
-              <p><span class="text-brand-ink font-semibold">${current}</span></p>
+              <p>
+                <span class="text-brand-ink font-semibold">
+                  ${current}
+                </span>
+              </p>
             </div>
           </div>
 
           ${
-            urls.length
+            mediaItems.length
               ? `
                 <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  ${urls
+                  ${mediaItems
                     .map(
-                      (u) => `
-                        <div class="aspect-[16/10] overflow-hidden rounded-lg bg-slate-100">
-                          <img src="${u}" alt="Listing image" class="h-full w-full object-cover" loading="lazy" />
-                        </div>
-                      `,
+                      (m) => `
+                    <div class="aspect-[16/10] overflow-hidden rounded-lg bg-slate-100">
+                      <img
+                        src="${m.url}"
+                        alt="${escapeAttr(m.alt || title)}"
+                        class="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  `,
                     )
                     .join("")}
                 </div>
@@ -110,7 +128,16 @@ export async function listingPage({ params, mountEl }) {
               `
           }
 
-          ${description ? `<div class="mt-4"><h2>Description</h2><p>${escapeHtml(description)}</p></div>` : ""}
+          ${
+            description
+              ? `
+                <div class="mt-4">
+                  <h2>Description</h2>
+                  <p>${escapeHtml(description)}</p>
+                </div>
+              `
+              : ""
+          }
 
           <div class="mt-6">
             <h2>Bids</h2>
@@ -124,28 +151,42 @@ export async function listingPage({ params, mountEl }) {
               !isLoggedIn
                 ? `
                   <p>You must log in to place a bid.</p>
-                  <button id="goLoginBtn" class="btn-primary mt-2">Login to bid</button>
+                  <button id="goLoginBtn" class="btn-primary mt-2">
+                    Login to bid
+                  </button>
                 `
                 : isSeller
                   ? `<p>You can’t bid on your own listing.</p>`
                   : ended
                     ? `<p>This auction has ended.</p>`
                     : `
-                      <form id="bidForm" class="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end">
-                        <div class="flex-1">
-                          <label for="bidAmount">Bid amount</label>
-                          <input id="bidAmount" type="number" min="1" step="1" placeholder="e.g. ${current + 1}" />
-                          <small>Must be higher than ${current}.</small>
-                        </div>
-                        <button class="btn-primary" type="submit">Place bid</button>
-                      </form>
-                    `
+                  <form
+                    id="bidForm"
+                    class="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end"
+                  >
+                    <div class="flex-1">
+                      <label for="bidAmount">Bid amount</label>
+                      <input
+                        id="bidAmount"
+                        type="number"
+                        min="1"
+                        step="1"
+                        placeholder="e.g. ${current + 1}"
+                      />
+                      <small>Must be higher than ${current}.</small>
+                    </div>
+                    <button class="btn-primary" type="submit">
+                      Place bid
+                    </button>
+                  </form>
+                `
             }
           </div>
         </div>
       </section>
     `;
 
+    // Wire events
     const goLoginBtn = mount.querySelector("#goLoginBtn");
     if (goLoginBtn) {
       goLoginBtn.onclick = () =>
@@ -165,8 +206,10 @@ export async function listingPage({ params, mountEl }) {
         }
 
         try {
+          // v2: POST /auction/listings/{id}/bids with { amount }
           await apiPost(`/listings/${id}/bids`, { amount });
-          navigate(`/listing/${id}`); // reload
+          // Reload listing page to show new bid
+          navigate(`/listing/${id}`);
         } catch (err) {
           console.error(err);
           showFeedback(err?.message || "Failed to place bid.");
@@ -180,7 +223,9 @@ export async function listingPage({ params, mountEl }) {
       <section class="card card-pad">
         <h1>Could not load listing</h1>
         <p>${escapeHtml(err?.message || "Unknown error")}</p>
-        <a href="#/" class="btn-secondary mt-3 inline-flex">Back to home</a>
+        <a href="#/" class="btn-secondary mt-3 inline-flex">
+          Back to home
+        </a>
       </section>
     `;
   }
@@ -209,12 +254,20 @@ function renderBids(bids) {
           ${sorted
             .map(
               (b) => `
-                <tr class="border-t border-brand-border">
-                  <td class="p-3">${escapeHtml(b?.bidder?.name ?? "—")}</td>
-                  <td class="p-3 font-semibold">${Number(b.amount || 0)}</td>
-                  <td class="p-3 text-brand-muted">${escapeHtml(new Date(b.created).toLocaleString())}</td>
-                </tr>
-              `,
+              <tr class="border-t border-brand-border">
+                <td class="p-3">
+                  ${escapeHtml(b?.bidder?.name ?? "—")}
+                </td>
+                <td class="p-3 font-semibold">
+                  ${Number(b.amount || 0)}
+                </td>
+                <td class="p-3 text-brand-muted">
+                  ${escapeHtml(
+                    b?.created ? new Date(b.created).toLocaleString() : "",
+                  )}
+                </td>
+              </tr>
+            `,
             )
             .join("")}
         </tbody>
@@ -230,4 +283,8 @@ function escapeHtml(str) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function escapeAttr(str) {
+  return escapeHtml(str).replaceAll("\n", "");
 }
