@@ -1,5 +1,12 @@
 // ./js/components/listingCard.js
-import { formatEndsAt, isEnded, highestBidAmount } from "../ui.js";
+import {
+  formatTimeLeft,
+  isEnded,
+  highestBidAmount,
+  escapeHtml,
+  timeAgo,
+  escapeAttr,
+} from "../ui.js";
 
 function safeImg(url) {
   return url && typeof url === "string" ? url : "";
@@ -22,6 +29,7 @@ export function listingCardHTML(listing) {
 
   const imgUrl = safeImg(firstUrl);
   const current = highestBidAmount(listing);
+  const hasBids = Array.isArray(listing?.bids) && listing.bids.length > 0;
 
   return `
     <a href="#/listing/${id}" class="card card-pad block hover:shadow-lg transition-shadow">
@@ -40,24 +48,132 @@ export function listingCardHTML(listing) {
         </span>
       </div>
 
-      <div class="mt-2 flex items-center justify-between">
-        <span class="text-sm text-brand-muted">Highest bid</span>
-        <span class="text-sm font-semibold text-brand-ink">${current}</span>
-      </div>
+      ${
+        hasBids
+          ? `
+        <div class="mt-2 flex items-center justify-between">
+          <span class="text-sm text-brand-muted">Highest bid</span>
+          <span class="text-sm font-semibold text-brand-ink">${current}</span>
+        </div>
+        `
+          : `
+        <div class="mt-2 text-sm font-semibold text-brand-muted">
+          NO BID YET!
+        </div>
+        `
+      }
 
       <div class="mt-1 flex items-center justify-between">
         <span class="text-sm text-brand-muted">Ends</span>
-        <span class="text-sm text-brand-ink">${escapeHtml(formatEndsAt(endsAt))}</span>
+        <span class="text-sm text-brand-ink">${escapeHtml(formatTimeLeft(endsAt))}</span>
       </div>
     </a>
   `;
 }
 
-function escapeHtml(str) {
-  return String(str ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+export function bidCardHTML(bid) {
+  const amount = Number(bid?.amount || 0);
+  const created = bid?.created || null;
+  const listing = bid?.listing ?? {};
+  const listingTitle = listing?.title || "Listing";
+  const listingId = listing?.id ?? null;
+
+  const mediaArray = Array.isArray(listing?.media) ? listing.media : [];
+  const thumb = mediaArray[0] ?? null;
+  const thumbUrl = thumb?.url || "";
+  const thumbAlt = thumb?.alt || listingTitle;
+
+  const timeText = created ? timeAgo(created) : "";
+
+  // status badge based on `_status`
+  let statusLabel = "";
+  let statusClasses = "";
+
+  switch (bid?._status) {
+    case "won":
+      statusLabel = "Won";
+      statusClasses = "bg-emerald-100 text-emerald-800 border-emerald-200";
+      break;
+    case "lost":
+      statusLabel = "Lost";
+      statusClasses = "bg-slate-100 text-slate-600 border-slate-200";
+      break;
+    case "leading":
+      statusLabel = "Leading";
+      statusClasses = "bg-blue-100 text-blue-800 border-blue-200";
+      break;
+    case "outbid":
+      statusLabel = "Outbid";
+      statusClasses = "bg-amber-100 text-amber-800 border-amber-200";
+      break;
+    default:
+      statusLabel = "";
+      statusClasses = "";
+  }
+
+  const badgeHtml = statusLabel
+    ? `<span class="inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium ${statusClasses}">
+         ${statusLabel}
+       </span>`
+    : "";
+
+  if (!listingId) {
+    // Fallback non-clickable
+    return `
+      <article class="card card-pad flex gap-3 items-center">
+        <div class="h-16 w-16 rounded-md overflow-hidden bg-slate-200 flex-shrink-0">
+          ${
+            thumbUrl
+              ? `<img src="${thumbUrl}" alt="${escapeAttr(thumbAlt)}" class="h-full w-full object-cover" />`
+              : `<div class="h-full w-full flex items-center justify-center text-xs text-brand-muted">No image</div>`
+          }
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <h3 class="font-semibold text-sm break-words">
+              ${escapeHtml(listingTitle)}
+            </h3>
+            ${badgeHtml}
+          </div>
+          <p class="text-sm">
+            Bid: <span class="font-semibold">${amount}</span>
+          </p>
+          <p class="text-xs text-brand-muted">
+            ${escapeHtml(timeText)}
+          </p>
+        </div>
+      </article>
+    `;
+  }
+
+  // Clickable card
+  return `
+    <a
+      href="#/listing/${listingId}"
+      class="card card-pad flex gap-3 items-center
+             hover:bg-slate-50 transition-colors"
+    >
+      <div class="h-16 w-16 rounded-md overflow-hidden bg-slate-200 flex-shrink-0">
+        ${
+          thumbUrl
+            ? `<img src="${thumbUrl}" alt="${escapeAttr(thumbAlt)}" class="h-full w-full object-cover" />`
+            : `<div class="h-full w-full flex items-center justify-center text-xs text-brand-muted">No image</div>`
+        }
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <h3 class="font-semibold text-sm break-words">
+            ${escapeHtml(listingTitle)}
+          </h3>
+          ${badgeHtml}
+        </div>
+        <p class="text-sm">
+          Bid: <span class="font-semibold">${amount}</span>
+        </p>
+        <p class="text-xs text-brand-muted">
+          ${escapeHtml(timeText)}
+        </p>
+      </div>
+    </a>
+  `;
 }
