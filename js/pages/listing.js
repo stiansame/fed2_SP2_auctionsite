@@ -8,6 +8,8 @@ import {
   formatEndsAt,
   isEnded,
   highestBidAmount,
+  escapeHtml,
+  escapeAttr,
 } from "../ui.js";
 
 export async function listingPage({ params, mountEl }) {
@@ -274,17 +276,4 @@ function renderBids(bids) {
       </table>
     </div>
   `;
-}
-
-function escapeHtml(str) {
-  return String(str ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function escapeAttr(str) {
-  return escapeHtml(str).replaceAll("\n", "");
 }

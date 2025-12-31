@@ -32,8 +32,6 @@
                         <h1>Live listings</h1>
                         <p>Browse auctions, view bids, and log in to place your own bids.</p>
                     </div>
-
-
                 </div>
             </section>
 
@@ -60,10 +58,10 @@
                     <div class="md:col-span-3">
                         <label for="statusSelect">Status</label>
                         <select id="statusSelect" name="status">
-                            <option value="all" selected>All</option>
-                            <option value="active">Active only</option>
+                            <!-- Default: Active only -->
+                            <option value="all">All</option>
+                            <option value="active" selected>Active only</option>
                             <option value="ended">Ended</option>
-
                         </select>
                     </div>
                 </form>
@@ -97,6 +95,11 @@
 
                 <div id="listingsGrid" class="hidden grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
 
+                <!-- Load more button for 15-at-a-time pagination -->
+                <button id="loadMoreBtn" class="btn-secondary mt-6 w-full hidden" type="button">
+                    Load more
+                </button>
+
                 <div id="listingsEmpty" class="hidden card card-pad text-center">
                     <h2>No listings found</h2>
                     <p>Try a different search or clear filters.</p>
@@ -107,6 +110,7 @@
                 </div>
             </section>
 
+            <!-- Old pagination section (optional, unused) -->
             <section id="pagination" class="mt-8 hidden items-center justify-between">
                 <button id="prevPageBtn" class="btn-secondary" disabled>← Previous</button>
                 <p class="text-sm text-brand-muted">Page <span id="pageNumber">1</span></p>
@@ -129,7 +133,10 @@
          inset-x-0 top-4 px-4 items-center
          sm:inset-auto sm:top-4 sm:right-4 sm:items-end"></div>
 
-
+    <!-- Back to top button -->
+    <button id="backToTopBtn" class="hidden fixed bottom-6 right-4 btn-secondary px-3 py-2 text-sm shadow-lg">
+        ↑ Back to top
+    </button>
 
     <script>
         (function () {

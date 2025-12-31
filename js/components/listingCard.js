@@ -15,8 +15,12 @@ function safeImg(url) {
 export function listingCardHTML(listing) {
   const id = listing?.id;
   const title = listing?.title ?? "Untitled";
+
   const endsAt = listing?.endsAt || listing?.ends_at || listing?.deadline;
-  const ended = isEnded(endsAt);
+
+  // ✅ Prefer Noroff's "_active" flag if present, fall back to date-based check
+  const hasActiveFlag = typeof listing?._active === "boolean";
+  const ended = hasActiveFlag ? !listing._active : isEnded(endsAt);
 
   // Noroff listings often have `media: [{url: "..."}]` or `media: ["..."]`
   const media = listing?.media;
