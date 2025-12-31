@@ -79,7 +79,7 @@ export async function profilePage({ mountEl }) {
 
     // Persist credits + sync header badge
     setCredit(credits);
-    renderHeader({ credit: credits });
+    renderHeader({ credit: credits, avatar: profile?.avatar, name });
 
     mount.innerHTML = `
       <section class="card card-pad max-w-5xl mx-auto">
@@ -142,7 +142,15 @@ export async function profilePage({ mountEl }) {
             <h2 class="text-lg font-semibold">${escapeHtml(name)}</h2>
             <p class="text-sm text-brand-muted">${escapeHtml(email)}</p>
             <p class="mt-1 text-sm font-medium">
-              💰 ${credits}
+  <span class="inline-flex items-center gap-2 h-9 px-3 rounded-full badge-accent text-sm leading-none">
+    <svg aria-hidden="true" viewBox="0 0 20 20" class="h-4 w-4">
+      <path
+        d="M3 6a2 2 0 0 1 2-2h9a1 1 0 1 1 0 2H5a1 1 0 0 0 0 2h11a1 1 0 0 1 1 1v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6zm11 4a1 1 0 1 0 0 2h3v-2h-3z"
+        fill="currentColor"
+      />
+    </svg>
+    ${credits}
+  </span>
             </p>
           </div>
         </div>
