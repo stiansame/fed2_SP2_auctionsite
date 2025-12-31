@@ -17,6 +17,7 @@ export const NOROFF_API_KEY = env.VITE_NOROFF_API_KEY;
  * 1) Run once in DevTools console:
  *    localStorage.setItem("NOROFF_API_KEY", "YOUR_KEY_HERE");
  * 2) This reads it at runtime.
+ * 3) Must update path to BASE_API_URL as well
 
 export const NOROFF_API_KEY = localStorage.getItem("NOROFF_API_KEY") || "";
  */
