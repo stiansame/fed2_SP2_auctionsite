@@ -127,6 +127,11 @@
         </div>
     </footer>
 
+    <!-- Toast container -->
+    <div id="toastRoot" class="fixed z-50 flex flex-col gap-2 pointer-events-none
+         inset-x-0 top-4 px-4 items-center
+         sm:inset-auto sm:top-4 sm:right-4 sm:items-end"></div>
+
 
 
     <script>
@@ -136,6 +141,7 @@
             if (btn && box) btn.addEventListener("click", () => box.classList.add("hidden"));
         })();
     </script>
+
 </body>
 
 </html>
