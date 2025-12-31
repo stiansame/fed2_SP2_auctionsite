@@ -1,10 +1,13 @@
 // ./js/config.js
-// Keep this file tiny and boring—easy to change later.
+
+const env = import.meta.env; // Vite injects this at build time
 
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://v2.api.noroff.dev";
+  env.VITE_API_BASE_URL || "https://v2.api.noroff.dev";
+
 export const AUCTION_PATH = "/auction";
-export const NOROFF_API_KEY = import.meta.env.VITE_NOROFF_API_KEY || "";
+
+export const NOROFF_API_KEY = env.VITE_NOROFF_API_KEY;
 
 /**
  * For LIVE-Server TESTING!
