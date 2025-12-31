@@ -14,11 +14,18 @@ export async function loginPage({ query, mountEl }) {
   const returnTo = query?.returnTo ? decodeURIComponent(query.returnTo) : "/";
 
   mount.innerHTML = `
-    <section class="card card-pad max-w-lg mx-auto">
+<section class="card card-pad max-w-lg mx-auto">
+  <div class="flex items-start justify-between gap-4">
+    <div>
       <h1>Login</h1>
       <p>Use your registered account to bid and create listings.</p>
+    </div>
 
-      <form id="loginForm" class="mt-4 flex flex-col gap-3">
+    <a class="btn-secondary" href="#/">Back</a>
+  </div>
+
+  <form id="loginForm" class="mt-4 flex flex-col gap-3">
+
         <div>
           <label for="email">Email</label>
           <input id="email" type="email" placeholder="name@stud.noroff.no" required />
@@ -65,9 +72,6 @@ export async function loginPage({ query, mountEl }) {
         token,
         user: { name, email: userEmail },
       });
-
-      // Debug: confirm it wrote
-      console.log("Stored auth:", localStorage.getItem("auction_auth_v2"));
 
       const credit = await maybeRefreshCredit();
       renderHeader({ credit });

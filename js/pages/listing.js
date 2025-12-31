@@ -39,7 +39,6 @@ export async function listingPage({ params, mountEl }) {
   `;
 
   try {
-    // v2: response is { data: { ...listing }, meta: {} }
     const res = await apiGet(`/listings/${id}`, {
       query: { _bids: true, _seller: true },
     });
@@ -54,11 +53,9 @@ export async function listingPage({ params, mountEl }) {
     const sellerName =
       listing?.seller?.name ?? listing?.seller?.email ?? "Unknown seller";
 
-    // Bids: included when _bids=true
     const bids = Array.isArray(listing?.bids) ? listing.bids : [];
     const current = highestBidAmount({ bids });
 
-    // Media: [{ url, alt }]
     const media = listing?.media;
     const mediaItems = Array.isArray(media)
       ? media
@@ -71,15 +68,18 @@ export async function listingPage({ params, mountEl }) {
       isLoggedIn && user?.name && listing?.seller?.name === user.name;
 
     mount.innerHTML = `
-      <section class="mb-4 flex items-center justify-between">
-        <a href="#/" class="btn-secondary">← Back</a>
-        <span class="${ended ? "badge-neutral" : "badge-warning"}">
-          ${ended ? "Ended" : "Active"}
-        </span>
-      </section>
-
       <section class="card card-pad">
-        <div class="flex flex-col gap-2">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+                      <span class="${ended ? "badge-neutral" : "badge-warning"}">
+            ${ended ? "Ended" : "Active"}
+          </span>
+          </div>
+          <a href="#/" class="btn-secondary">Back</a>
+        </div>
+
+
+        <div class="flex flex-col gap-2 mt-4">
           <h1>${escapeHtml(title)}</h1>
           <p>
             Seller:
@@ -188,7 +188,6 @@ export async function listingPage({ params, mountEl }) {
       </section>
     `;
 
-    // Wire events
     const goLoginBtn = mount.querySelector("#goLoginBtn");
     if (goLoginBtn) {
       goLoginBtn.onclick = () =>
@@ -208,9 +207,7 @@ export async function listingPage({ params, mountEl }) {
         }
 
         try {
-          // v2: POST /auction/listings/{id}/bids with { amount }
           await apiPost(`/listings/${id}/bids`, { amount });
-          // Reload listing page to show new bid
           navigate(`/listing/${id}`);
         } catch (err) {
           console.error(err);
