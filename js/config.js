@@ -7,7 +7,7 @@ export const AUCTION_PATH = "/auction";
 export const NOROFF_API_KEY = import.meta.env.VITE_NOROFF_API_KEY || "";
 
 /**
- * FOr LIVE-Server TESTING
+ * For LIVE-Server TESTING!
  * Noroff v2 requires an API key header: "X-Noroff-API-Key".
  *
  * Recommended (so you don't commit secrets):
