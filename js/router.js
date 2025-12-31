@@ -81,4 +81,7 @@ export function createRouter(routes) {
 
   window.addEventListener("hashchange", handleRoute);
   window.addEventListener("load", handleRoute);
+
+  // 🔑 IMPORTANT: run once now (handles refresh + initial load)
+  handleRoute();
 }

@@ -121,7 +121,12 @@ export function renderHeader({
   if (isLoggedIn) {
     header.querySelector("#logoutBtn")?.addEventListener("click", () => {
       logout();
-      navigate("/"); // back to home
+
+      // Re-render header as logged-out (no credit, no username)
+      renderHeader({ credit: null });
+
+      // Navigate back to home (router will load listings)
+      navigate("/");
     });
   }
 }
