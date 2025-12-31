@@ -5,8 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx tailwindcss -i ./css/input.css -o ./css/style.css --watch",
-    "build": "npx tailwindcss -i ./css/input.css -o ./css/style.css --minify"
+    "dev-css": "npx tailwindcss -i ./css/input.css -o ./css/style.css --watch",
+    "build-css": "npx tailwindcss -i ./css/input.css -o ./css/style.css --minify",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
