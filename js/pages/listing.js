@@ -262,10 +262,9 @@ function renderBids(bids) {
                   ${Number(b.amount || 0)}
                 </td>
                 <td class="p-3 text-brand-muted">
-                  ${escapeHtml(
-                    b?.created ? new Date(b.created).toLocaleString() : "",
-                  )}
+                  ${escapeHtml(b?.created ? timeAgo(b.created) : "")}
                 </td>
+
               </tr>
             `,
             )
