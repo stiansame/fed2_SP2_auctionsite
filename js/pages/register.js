@@ -1,7 +1,7 @@
 // ./js/pages/register.js
 import { apiPost } from "../api.js";
 import { navigate } from "../router.js";
-import { showFeedback, hideFeedback } from "../ui.js";
+import { showFeedback, hideFeedback, showToast } from "../ui.js";
 
 export async function registerPage({ mountEl }) {
   hideFeedback();
@@ -54,16 +54,24 @@ export async function registerPage({ mountEl }) {
     const password = mount.querySelector("#password").value;
 
     if (!email.endsWith("@stud.noroff.no")) {
-      showFeedback("Email must end with @stud.noroff.no");
+      const msg = "Email must end with @stud.noroff.no";
+      showFeedback(msg);
+      showToast(msg, "error"); // ✅ toast for validation error
       return;
     }
 
     try {
       await apiPost("/auth/register", { name, email, password });
+
+      // ✅ toast on success
+      showToast("Account created successfully! You can now log in.");
+
       navigate("/login");
     } catch (err) {
       console.error(err);
-      showFeedback(err?.message || "Registration failed.");
+      const msg = err?.message || "Registration failed.";
+      showFeedback(msg);
+      showToast(msg, "error"); // ✅ toast on error
     }
   };
 }

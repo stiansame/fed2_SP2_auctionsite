@@ -1,7 +1,7 @@
 // ./js/pages/create.js
 import { apiPost } from "../api.js";
 import { navigate } from "../router.js";
-import { showFeedback, hideFeedback } from "../ui.js";
+import { showFeedback, hideFeedback, showToast, escapeHtml } from "../ui.js";
 
 export async function createListingPage({ mountEl }) {
   hideFeedback();
@@ -106,7 +106,9 @@ export async function createListingPage({ mountEl }) {
 
     const endsAt = new Date(endsAtInput);
     if (!Number.isFinite(endsAt.getTime()) || endsAt.getTime() <= Date.now()) {
-      showFeedback("Deadline must be a valid future date/time.");
+      const msg = "Deadline must be a valid future date/time.";
+      showFeedback(msg);
+      showToast(msg, "error");
       return;
     }
 
@@ -120,19 +122,16 @@ export async function createListingPage({ mountEl }) {
 
       const created = await apiPost("/listings", payload);
       const id = created?.id;
+
+      // ✅ toast on success
+      showToast("Listing created successfully!");
+
       navigate(id ? `/listing/${id}` : "/");
     } catch (err) {
       console.error(err);
-      showFeedback(err?.message || "Failed to create listing.");
+      const msg = err?.message || "Failed to create listing.";
+      showFeedback(msg);
+      showToast(msg, "error"); // ✅ toast on error
     }
   };
-}
-
-function escapeHtml(str) {
-  return String(str ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 }

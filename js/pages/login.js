@@ -3,7 +3,7 @@ import { apiPost } from "../api.js";
 import { setAuth, maybeRefreshCredit } from "../state.js";
 import { navigate } from "../router.js";
 import { renderHeader } from "../components/header.js";
-import { showFeedback, hideFeedback } from "../ui.js";
+import { showFeedback, hideFeedback, showToast } from "../ui.js";
 
 export async function loginPage({ query, mountEl }) {
   hideFeedback();
@@ -76,10 +76,15 @@ export async function loginPage({ query, mountEl }) {
       const credit = await maybeRefreshCredit();
       renderHeader({ credit });
 
+      // ✅ toast on success
+      showToast("Logged in successfully!");
+
       navigate(returnTo || "/");
     } catch (err) {
       console.error(err);
-      showFeedback(err?.message || "Login failed.");
+      const msg = err?.message || "Login failed.";
+      showFeedback(msg);
+      showToast(msg, "error"); // ✅ toast on error
     }
   };
 }
