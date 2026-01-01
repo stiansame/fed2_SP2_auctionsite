@@ -150,15 +150,18 @@ export async function listingPage({ params, mountEl }) {
               ${
                 mediaItems.length
                   ? `
-                    <div class="w-full rounded-2xl bg-slate-100 flex items-center justify-center overflow-hidden">
-                      <img
-                        id="mainListingImage"
-                        src="${mediaItems[0].url}"
-                        alt="${escapeAttr(mediaItems[0].alt || title)}"
-                        class="max-h-[28rem] w-full object-contain"
-                        loading="lazy"
-                      />
-                    </div>
+<div class="w-full flex justify-center">
+  <div class="inline-block max-w-full rounded-2xl overflow-hidden">
+    <img
+      id="mainListingImage"
+      src="${mediaItems[0].url}"
+      alt="${escapeAttr(mediaItems[0].alt || title)}"
+      class="block max-h-[28rem] max-w-full object-contain"
+      loading="lazy"
+    />
+  </div>
+</div>
+
 
                     <div class="flex gap-2 overflow-x-auto pt-1">
                       ${mediaItems
