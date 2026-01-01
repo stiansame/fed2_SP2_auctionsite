@@ -36,7 +36,15 @@ export function listingCardHTML(listing) {
   const hasBids = Array.isArray(listing?.bids) && listing.bids.length > 0;
 
   return `
-    <a href="#/listing/${id}" class="card card-pad block hover:shadow-lg transition-shadow">
+            <a
+          href="#/listing/${id}"
+          class="card card-pad block
+                border border-brand-border
+                hover:border-brand-accent
+                transition-colors duration-150
+                hover:shadow-lg
+                no-underline hover:no-underline"
+        >
       <div class="aspect-[16/10] overflow-hidden rounded-lg bg-slate-100 flex items-center justify-center">
         ${
           imgUrl
@@ -68,7 +76,7 @@ export function listingCardHTML(listing) {
       }
 
       <div class="mt-1 flex items-center justify-between">
-        <span class="text-sm text-brand-muted">Ends</span>
+        <span class="text-sm text-brand-muted">Ends in</span>
         <span class="text-sm text-brand-ink">${escapeHtml(formatTimeLeft(endsAt))}</span>
       </div>
     </a>
@@ -88,6 +96,11 @@ export function bidCardHTML(bid) {
   const thumbAlt = thumb?.alt || listingTitle;
 
   const timeText = created ? timeAgo(created) : "";
+
+  // endsAt -> for "Ends in" time left
+  const endsAt =
+    listing?.endsAt || listing?.ends_at || listing?.deadline || null;
+  const endsInText = endsAt ? formatTimeLeft(endsAt) : "";
 
   // status badge based on `_status`
   let statusLabel = "";
@@ -124,8 +137,12 @@ export function bidCardHTML(bid) {
   if (!listingId) {
     // Fallback non-clickable
     return `
-      <article class="card card-pad flex gap-3 items-center">
-        <div class="h-16 w-16 rounded-md overflow-hidden bg-slate-200 flex-shrink-0">
+            <article
+              class="card card-pad flex gap-3 items-center
+                    border border-brand-border
+                    hover:border-brand-accent
+                    transition-colors"
+            >
           ${
             thumbUrl
               ? `<img src="${thumbUrl}" alt="${escapeAttr(thumbAlt)}" class="h-full w-full object-cover" />`
@@ -140,10 +157,17 @@ export function bidCardHTML(bid) {
             ${badgeHtml}
           </div>
           <p class="text-sm">
-            Bid: <span class="font-semibold">${amount}</span>
+            Bid: <span class="font-semibold">${amount} Credits</span>
           </p>
+          ${
+            endsInText
+              ? `<p class="text-xs text-brand-muted">
+                   Ends in ${escapeHtml(endsInText)}
+                 </p>`
+              : ""
+          }
           <p class="text-xs text-brand-muted">
-            ${escapeHtml(timeText)}
+            Bid placed ${escapeHtml(timeText)}
           </p>
         </div>
       </article>
@@ -152,11 +176,15 @@ export function bidCardHTML(bid) {
 
   // Clickable card
   return `
-    <a
-      href="#/listing/${listingId}"
-      class="card card-pad flex gap-3 items-center
-             hover:bg-slate-50 transition-colors"
-    >
+<a
+  href="#/listing/${listingId}"
+  class="card card-pad flex gap-3 items-center
+         border border-brand-border
+         hover:border-brand-accent
+         transition-colors
+         no-underline hover:no-underline"
+>
+
       <div class="h-16 w-16 rounded-md overflow-hidden bg-slate-200 flex-shrink-0">
         ${
           thumbUrl
@@ -172,10 +200,17 @@ export function bidCardHTML(bid) {
           ${badgeHtml}
         </div>
         <p class="text-sm">
-          Bid: <span class="font-semibold">${amount}</span>
+          Bid: <span class="font-semibold">${amount} Credits</span>
         </p>
+        ${
+          endsInText
+            ? `<p class="text-xs text-brand-muted">
+                 Ends in ${escapeHtml(endsInText)}
+               </p>`
+            : ""
+        }
         <p class="text-xs text-brand-muted">
-          ${escapeHtml(timeText)}
+          Bid placed ${escapeHtml(timeText)}
         </p>
       </div>
     </a>
