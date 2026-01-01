@@ -1121,6 +1121,14 @@ input:focus,
   height: 100%;
 }
 
+.h-10 {
+  height: 2.5rem;
+}
+
+.h-12 {
+  height: 3rem;
+}
+
 .max-h-\[28rem\] {
   max-height: 28rem;
 }
@@ -1159,6 +1167,14 @@ input:focus,
 
 .w-full {
   width: 100%;
+}
+
+.w-10 {
+  width: 2.5rem;
+}
+
+.w-12 {
+  width: 3rem;
 }
 
 .min-w-0 {
@@ -1361,6 +1377,11 @@ input:focus,
   border-color: transparent;
 }
 
+.border-brand-accent {
+  --tw-border-opacity: 1;
+  border-color: rgb(37 99 235 / var(--tw-border-opacity, 1));
+}
+
 .border-b-brand-ink {
   --tw-border-opacity: 1;
   border-bottom-color: rgb(15 23 42 / var(--tw-border-opacity, 1));
@@ -1427,6 +1448,32 @@ input:focus,
 .bg-yellow-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(250 204 21 / var(--tw-bg-opacity, 1));
+}
+
+.bg-state-danger {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
+}
+
+.bg-state-warning {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 158 11 / var(--tw-bg-opacity, 1));
+}
+
+.bg-state-warning\/50 {
+  background-color: rgb(245 158 11 / 0.5);
+}
+
+.bg-state-danger\/50 {
+  background-color: rgb(220 38 38 / 0.5);
+}
+
+.bg-state-danger\/30 {
+  background-color: rgb(220 38 38 / 0.3);
+}
+
+.bg-state-warning\/30 {
+  background-color: rgb(245 158 11 / 0.3);
 }
 
 .object-contain {
@@ -1605,6 +1652,10 @@ input:focus,
   opacity: 0.8;
 }
 
+.opacity-50 {
+  opacity: 0.5;
+}
+
 .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
@@ -1670,13 +1721,42 @@ input:focus,
   background-color: rgb(234 179 8 / var(--tw-bg-opacity, 1));
 }
 
+.hover\:bg-state-warning\/90:hover {
+  background-color: rgb(245 158 11 / 0.9);
+}
+
+.hover\:bg-state-danger\/90:hover {
+  background-color: rgb(220 38 38 / 0.9);
+}
+
+.hover\:font-semibold:hover {
+  font-weight: 600;
+}
+
 .hover\:text-brand-ink:hover {
   --tw-text-opacity: 1;
   color: rgb(15 23 42 / var(--tw-text-opacity, 1));
 }
 
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.hover\:no-underline:hover {
+  text-decoration-line: none;
+}
+
 .hover\:opacity-100:hover {
   opacity: 1;
+}
+
+.hover\:opacity-90:hover {
+  opacity: 0.9;
+}
+
+.hover\:opacity-10:hover {
+  opacity: 0.1;
 }
 
 .hover\:shadow-lg:hover {
@@ -1778,6 +1858,15 @@ input:focus,
 
 .focus-visible\:ring-offset-white:focus-visible {
   --tw-ring-offset-color: #fff;
+}
+
+.group:hover .group-hover\:border-brand-accent {
+  --tw-border-opacity: 1;
+  border-color: rgb(37 99 235 / var(--tw-border-opacity, 1));
+}
+
+.group:hover .group-hover\:font-semibold {
+  font-weight: 600;
 }
 
 @media (min-width: 640px) {

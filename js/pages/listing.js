@@ -35,7 +35,7 @@ export async function listingPage({ params, mountEl }) {
           <h1>Listing</h1>
           <p>Loading…</p>
         </div>
-        <a href="#/" class="btn-secondary">Back</a>
+        <a href="#/" class="btn-secondary hover:no-underline hover:font-semibold">Back</a>
       </div>
     </section>
   `;
@@ -53,7 +53,7 @@ export async function listingPage({ params, mountEl }) {
         <section class="card card-pad">
           <div class="flex items-start justify-between mb-4">
             <h1>Not found</h1>
-            <a href="#/" class="btn-secondary">Back</a>
+            <a href="#/" class="btn-secondary hover:no-underline hover:font-semibold">Back</a>
           </div>
           <p>This listing does not exist.</p>
         </section>
@@ -108,7 +108,9 @@ export async function listingPage({ params, mountEl }) {
         <button
           id="deleteListingBtn"
           type="button"
-          class="btn-secondary inline-flex items-center gap-2 bg-red-600 text-white hover:bg-red-700"
+          class="btn-secondary inline-flex items-center gap-2 
+                  bg-state-danger/30 text-black 
+                  hover:bg-state-danger/90 hover:text-white"
         >
           <svg
             aria-hidden="true"
@@ -125,7 +127,9 @@ export async function listingPage({ params, mountEl }) {
         <button
           id="editListingBtn"
           type="button"
-          class="btn-secondary inline-flex items-center gap-2 bg-yellow-400 text-black hover:bg-yellow-500"
+          class="btn-secondary inline-flex items-center gap-2 
+                  bg-state-warning/30 text-black 
+                  hover:bg-state-warning/90 hover:text-white"
         >
           <svg
             aria-hidden="true"
@@ -142,7 +146,7 @@ export async function listingPage({ params, mountEl }) {
       `
         : ""
     }
-    <a href="#/" class="btn-secondary">Back</a>
+    <a href="#/" class="btn-secondary hover:no-underline hover:font-semibold">Back</a>
   </div>
 </div>
 
@@ -155,7 +159,7 @@ export async function listingPage({ params, mountEl }) {
                 ? `
                 <a
                   href="${sellerProfileHref}"
-                  class="inline-flex items-center gap-2 text-brand-ink font-medium"
+                  class="group inline-flex items-center gap-2 text-brand-ink font-medium hover:no-underline hover:font-semibold"
                 >
                   ${
                     sellerAvatarUrl
@@ -163,13 +167,13 @@ export async function listingPage({ params, mountEl }) {
                       <img
                         src="${sellerAvatarUrl}"
                         alt="${escapeAttr(sellerAvatarAlt)}"
-                        class="h-8 w-8 rounded-full object-cover"
+                        class="h-12 w-12 rounded-full object-cover border border-brand-border transition-colors group-hover:border-brand-accent"
                         loading="lazy"
                       />
                     `
                       : ""
                   }
-                  <span>${escapeHtml(sellerName)}</span>
+                  <span class="group-hover:font-semibold">${escapeHtml(sellerName)}</span>
                 </a>
               `
                 : `
@@ -226,12 +230,12 @@ export async function listingPage({ params, mountEl }) {
                       ${mediaItems
                         .map(
                           (m, idx) => `
-                            <button
+                                                       <button
                               type="button"
                               class="relative h-20 w-20 flex-shrink-0 rounded-xl overflow-hidden border-2 ${
                                 idx === 0
-                                  ? "border-brand-ink"
-                                  : "border-transparent opacity-80 hover:opacity-100"
+                                  ? "border-brand-accent opacity-100"
+                                  : "border-brand-border opacity-80 hover:opacity-100"
                               }"
                               data-media-index="${idx}"
                               aria-label="Show image ${idx + 1}"
@@ -483,10 +487,12 @@ export async function listingPage({ params, mountEl }) {
             mainImg.alt = item.alt || title;
           }
 
-          thumbButtons.forEach((b) =>
-            b.classList.remove("border-brand-ink", "opacity-100"),
-          );
-          btn.classList.add("border-brand-ink");
+          thumbButtons.forEach((b) => {
+            b.classList.remove("border-brand-accent", "opacity-100");
+            b.classList.add("border-brand-border", "opacity-80");
+          });
+          btn.classList.remove("border-brand-border", "opacity-80");
+          btn.classList.add("border-brand-accent", "opacity-100");
         });
       });
     }
@@ -660,7 +666,7 @@ export async function listingPage({ params, mountEl }) {
       <section class="card card-pad">
         <h1>Could not load listing</h1>
         <p>${escapeHtml(err?.message || "Unknown error")}</p>
-        <a href="#/" class="btn-secondary mt-3 inline-flex">
+        <a href="#/" class="btn-secondary mt-3 inline-flex hover:no-underline hover:font-semibold">
           Back to home
         </a>
       </section>
@@ -711,7 +717,7 @@ function renderBids(bids = []) {
                       ? `
                       <a
                         href="#/profile/${encodeURIComponent(b.bidder.name)}"
-                        class="flex items-center gap-2"
+                        class="group flex items-center gap-2 hover:no-underline"
                       >
                         ${
                           b?.bidder?.avatar?.url
@@ -723,15 +729,15 @@ function renderBids(bids = []) {
                                   b.bidder.name ||
                                   "Bidder avatar",
                               )}"
-                              class="h-8 w-8 rounded-full object-cover"
+                              class="h-8 w-8 rounded-full object-cover border border-brand-border transition-colors group-hover:border-brand-accent"
                               loading="lazy"
                             />
                           `
                             : `
-                            <div class="h-8 w-8 rounded-full bg-slate-200"></div>
+                            <div class="h-8 w-8 rounded-full bg-slate-200 border border-brand-border transition-colors group-hover:border-brand-accent"></div>
                           `
                         }
-                        <span>${escapeHtml(b.bidder.name)}</span>
+                        <span class="group-hover:font-semibold">${escapeHtml(b.bidder.name)}</span>
                       </a>
                     `
                       : `
