@@ -3,10 +3,12 @@ import { apiPost } from "../api.js";
 import { setAuth, maybeRefreshCredit } from "../state.js";
 import { navigate } from "../router.js";
 import { renderHeader } from "../components/header.js";
-import { showFeedback, hideFeedback, showToast } from "../ui.js";
+import { showFeedback, hideFeedback, showToast, setPageTitle } from "../ui.js";
 
 export async function loginPage({ query, mountEl }) {
   hideFeedback();
+
+  setPageTitle("Login");
 
   const mount = mountEl || document.getElementById("appView");
   if (!mount) return;

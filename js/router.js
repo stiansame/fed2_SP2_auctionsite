@@ -54,6 +54,9 @@ export function createRouter(routes) {
     const path = rawPath || "/";
     const query = parseQuery(rawQuery);
 
+    //default ducument title
+    document.title = "Noroff TradeHub | Home & Listings";
+
     // Toggle home vs app view
     const { mountEl } = setView(path);
 

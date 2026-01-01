@@ -12,6 +12,7 @@ import {
   escapeAttr,
   timeAgo,
   showToast,
+  setPageTitle,
 } from "../ui.js";
 
 export async function listingPage({ params, mountEl }) {
@@ -92,6 +93,8 @@ export async function listingPage({ params, mountEl }) {
       !!isLoggedIn && !!user?.name && listing?.seller?.name === user.name;
 
     const endsAtLocal = toLocalDateTimeValue(endsAt);
+
+    setPageTitle(`ITEM | ${title}`);
 
     mount.innerHTML = `
       <section class="card card-pad">

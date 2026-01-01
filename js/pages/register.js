@@ -1,10 +1,12 @@
 // ./js/pages/register.js
 import { apiPost } from "../api.js";
 import { navigate } from "../router.js";
-import { showFeedback, hideFeedback, showToast } from "../ui.js";
+import { showFeedback, hideFeedback, showToast, setPageTitle } from "../ui.js";
 
 export async function registerPage({ mountEl }) {
   hideFeedback();
+
+  setPageTitle("Register");
 
   const mount = mountEl || document.getElementById("appView");
   if (!mount) return;

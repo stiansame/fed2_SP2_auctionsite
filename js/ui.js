@@ -212,3 +212,7 @@ export function formatTimeLeft(endsAt) {
 export function escapeAttr(str) {
   return escapeHtml(str).replaceAll("\n", "");
 }
+
+export function setPageTitle(text = "Home") {
+  document.title = `Noroff TradeHub | ${text}`;
+}

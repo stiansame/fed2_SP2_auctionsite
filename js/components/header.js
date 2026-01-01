@@ -95,7 +95,7 @@ export function renderHeader({
   header.innerHTML = `
     <div class="container-page py-3 flex items-center justify-between gap-3">
       <a href="#/" class="font-heading text-lg font-semibold tracking-tight text-brand-ink">
-        Noroff Auctionsite
+        Noroff TradeHub
       </a>
 
       <nav class="flex items-center gap-2" aria-label="Primary navigation">

@@ -5,6 +5,7 @@ import {
   showFeedback,
   setHomeViewState,
   isEnded,
+  setPageTitle,
 } from "../ui.js";
 import { listingCardHTML } from "../components/listingCard.js";
 
@@ -13,6 +14,8 @@ let scrollHandlerAttached = false;
 
 export async function homePage() {
   hideFeedback();
+
+  setPageTitle("Home & Listings");
 
   const grid = document.getElementById("listingsGrid");
   const form = document.getElementById("searchForm");

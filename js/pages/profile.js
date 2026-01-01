@@ -8,6 +8,7 @@ import {
   showToast,
   escapeAttr,
   escapeHtml,
+  setPageTitle,
 } from "../ui.js";
 import { listingCardHTML, bidCardHTML } from "../components/listingCard.js";
 
@@ -21,6 +22,8 @@ export async function profilePage({ params, mountEl }) {
   const routeName = params?.name; // from /profile/:name
   const activeName = routeName || user?.name;
   const isSelf = !!user?.name && user.name === activeName;
+
+  setPageTitle(`${activeName}'s profile`);
 
   if (!activeName) {
     mount.innerHTML = `

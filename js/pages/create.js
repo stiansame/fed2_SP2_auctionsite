@@ -1,10 +1,18 @@
 // ./js/pages/create.js
 import { apiPost } from "../api.js";
 import { navigate } from "../router.js";
-import { showFeedback, hideFeedback, showToast, escapeHtml } from "../ui.js";
+import {
+  showFeedback,
+  hideFeedback,
+  showToast,
+  escapeHtml,
+  setPageTitle,
+} from "../ui.js";
 
 export async function createListingPage({ mountEl }) {
   hideFeedback();
+
+  setPageTitle("Create Listing");
 
   const mount = mountEl || document.getElementById("appView");
   if (!mount) return;
