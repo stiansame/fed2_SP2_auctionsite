@@ -54,6 +54,14 @@ export async function listingPage({ params, mountEl }) {
     const sellerName =
       listing?.seller?.name ?? listing?.seller?.email ?? "Unknown seller";
 
+    const sellerAvatarUrl = listing?.seller?.avatar?.url || null;
+    const sellerAvatarAlt =
+      listing?.seller?.avatar?.alt || sellerName || "Seller avatar";
+
+    const sellerProfileHref = sellerName
+      ? `#/profile/${encodeURIComponent(sellerName)}`
+      : null;
+
     const bids = Array.isArray(listing?.bids) ? listing.bids : [];
     const current = highestBidAmount({ bids });
 
@@ -82,12 +90,48 @@ export async function listingPage({ params, mountEl }) {
 
         <div class="flex flex-col gap-2 mt-4">
           <h1>${escapeHtml(title)}</h1>
-          <p>
-            Seller:
-            <span class="text-brand-ink font-medium">
-              ${escapeHtml(sellerName)}
-            </span>
-          </p>
+<p>
+  ${
+    sellerProfileHref
+      ? `
+      <a
+        href="${sellerProfileHref}"
+        class="inline-flex items-center gap-2 text-brand-ink font-medium"
+      >
+        ${
+          sellerAvatarUrl
+            ? `
+            <img
+              src="${sellerAvatarUrl}"
+              alt="${escapeAttr(sellerAvatarAlt)}"
+              class="h-8 w-8 rounded-full object-cover"
+              loading="lazy"
+            />
+          `
+            : ""
+        }
+        <span>${escapeHtml(sellerName)}</span>
+      </a>
+    `
+      : `
+      <span class="inline-flex items-center gap-2 text-brand-ink font-medium">
+        ${
+          sellerAvatarUrl
+            ? `
+            <img
+              src="${sellerAvatarUrl}"
+              alt="${escapeAttr(sellerAvatarAlt)}"
+              class="h-8 w-8 rounded-full object-cover"
+              loading="lazy"
+            />
+          `
+            : ""
+        }
+        <span>${escapeHtml(sellerName)}</span>
+      </span>
+    `
+  }
+</p>
 
           <div class="mt-2 grid gap-3 sm:grid-cols-2">
             <div class="card card-pad">
@@ -255,9 +299,55 @@ function renderBids(bids) {
             .map(
               (b) => `
               <tr class="border-t border-brand-border">
-                <td class="p-3">
-                  ${escapeHtml(b?.bidder?.name ?? "—")}
-                </td>
+<td class="p-3">
+  ${
+    b?.bidder?.name
+      ? `
+      <a
+        href="#/profile/${encodeURIComponent(b.bidder.name)}"
+        class="flex items-center gap-2"
+      >
+        ${
+          b?.bidder?.avatar?.url
+            ? `
+            <img
+              src="${b.bidder.avatar.url}"
+              alt="${escapeAttr(
+                b.bidder.avatar.alt || b.bidder.name || "Bidder avatar",
+              )}"
+              class="h-8 w-8 rounded-full object-cover"
+              loading="lazy"
+            />
+          `
+            : `
+            <div class="h-8 w-8 rounded-full bg-slate-200"></div>
+          `
+        }
+        <span>${escapeHtml(b.bidder.name)}</span>
+      </a>
+    `
+      : `
+      <div class="flex items-center gap-2">
+        ${
+          b?.bidder?.avatar?.url
+            ? `
+            <img
+              src="${b.bidder.avatar.url}"
+              alt="${escapeAttr(b.bidder.avatar.alt || "Bidder avatar")}"
+              class="h-8 w-8 rounded-full object-cover"
+              loading="lazy"
+            />
+          `
+            : `
+            <div class="h-8 w-8 rounded-full bg-slate-200"></div>
+          `
+        }
+        <span>${escapeHtml(b?.bidder?.name ?? "—")}</span>
+      </div>
+    `
+  }
+</td>
+
                 <td class="p-3 font-semibold">
                   ${Number(b.amount || 0)}
                 </td>
