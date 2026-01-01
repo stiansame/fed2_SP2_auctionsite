@@ -151,7 +151,7 @@ export async function listingPage({ params, mountEl }) {
                 mediaItems.length
                   ? `
 <div class="w-full flex justify-center">
-  <div class="inline-block max-w-full rounded-2xl overflow-hidden">
+  <div class="inline-block max-w-full rounded-2xl overflow-hidden card">
     <img
       id="mainListingImage"
       src="${mediaItems[0].url}"
