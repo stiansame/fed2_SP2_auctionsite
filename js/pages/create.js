@@ -16,7 +16,7 @@ export async function createListingPage({ mountEl }) {
           <h1>Create listing</h1>
           <p>Create an auction with a title, description, media URLs, and a deadline.</p>
         </div>
-        <a class="btn-secondary" href="#/">Back</a>
+        <a class="btn-secondary hover:no-underline hover:font-semibold" href="#/">← Back</a>
       </div>
 
       <form id="createForm" class="mt-4 flex flex-col gap-4">
@@ -49,8 +49,8 @@ export async function createListingPage({ mountEl }) {
         </div>
 
         <div class="flex gap-2">
-          <button class="btn-primary" type="submit">Create</button>
-          <a class="btn-secondary" href="#/">Cancel</a>
+          <button class="btn-primary hover:no-underline hover:font-semibold" type="submit">Create</button>
+          <a class="btn-secondary hover:no-underline hover:font-semibold" href="#/">Cancel</a>
         </div>
       </form>
     </section>
@@ -68,7 +68,7 @@ export async function createListingPage({ mountEl }) {
             (u, idx) => `
               <div class="flex items-center justify-between gap-2 border border-brand-border rounded-md p-2 bg-white">
                 <span class="text-sm break-all">${escapeHtml(u)}</span>
-                <button class="btn-secondary" type="button" data-remove="${idx}">Remove</button>
+                <button class="btn-secondary hover:no-underline hover:font-semibold" type="button" data-remove="${idx}">Remove</button>
               </div>
             `,
           )

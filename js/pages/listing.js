@@ -35,7 +35,7 @@ export async function listingPage({ params, mountEl }) {
           <h1>Listing</h1>
           <p>Loading…</p>
         </div>
-        <a href="#/" class="btn-secondary hover:no-underline hover:font-semibold">Back</a>
+        <a href="#/" class="btn-secondary hover:no-underline hover:font-semibold">← Back</a>
       </div>
     </section>
   `;
@@ -53,7 +53,7 @@ export async function listingPage({ params, mountEl }) {
         <section class="card card-pad">
           <div class="flex items-start justify-between mb-4">
             <h1>Not found</h1>
-            <a href="#/" class="btn-secondary hover:no-underline hover:font-semibold">Back</a>
+            <a href="#/" class="btn-secondary hover:no-underline hover:font-semibold">← Back</a>
           </div>
           <p>This listing does not exist.</p>
         </section>
@@ -146,7 +146,7 @@ export async function listingPage({ params, mountEl }) {
       `
         : ""
     }
-    <a href="#/" class="btn-secondary hover:no-underline hover:font-semibold">Back</a>
+    <a href="#/" class="btn-secondary hover:no-underline hover:font-semibold">← Back</a>
   </div>
 </div>
 

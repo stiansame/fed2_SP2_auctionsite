@@ -5,10 +5,10 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: [
+          "Roboto",
           "Inter",
           "system-ui",
           "Segoe UI",
-          "Roboto",
           "Arial",
           "sans-serif",
         ],

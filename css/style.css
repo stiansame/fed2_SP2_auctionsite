@@ -154,7 +154,7 @@ html,
   -o-tab-size: 4;
      tab-size: 4;
   /* 3 */
-  font-family: Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: Roboto, Inter, system-ui, Segoe UI, Arial, sans-serif;
   /* 4 */
   font-feature-settings: normal;
   /* 5 */
@@ -555,7 +555,7 @@ video {
 }
 
 html {
-  font-family: Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: Roboto, Inter, system-ui, Segoe UI, Arial, sans-serif;
   background-color: #F8FAFC;
   color: #0F172A;
 }
@@ -1085,6 +1085,10 @@ input:focus,
   aspect-ratio: 16/10;
 }
 
+.h-12 {
+  height: 3rem;
+}
+
 .h-16 {
   height: 4rem;
 }
@@ -1121,20 +1125,16 @@ input:focus,
   height: 100%;
 }
 
-.h-10 {
-  height: 2.5rem;
-}
-
-.h-12 {
-  height: 3rem;
-}
-
 .max-h-\[28rem\] {
   max-height: 28rem;
 }
 
 .w-1\/2 {
   width: 50%;
+}
+
+.w-12 {
+  width: 3rem;
 }
 
 .w-16 {
@@ -1167,14 +1167,6 @@ input:focus,
 
 .w-full {
   width: 100%;
-}
-
-.w-10 {
-  width: 2.5rem;
-}
-
-.w-12 {
-  width: 3rem;
 }
 
 .min-w-0 {
@@ -1343,6 +1335,11 @@ input:focus,
   border-color: rgb(191 219 254 / var(--tw-border-opacity, 1));
 }
 
+.border-brand-accent {
+  --tw-border-opacity: 1;
+  border-color: rgb(37 99 235 / var(--tw-border-opacity, 1));
+}
+
 .border-brand-border {
   --tw-border-opacity: 1;
   border-color: rgb(226 232 240 / var(--tw-border-opacity, 1));
@@ -1375,11 +1372,6 @@ input:focus,
 
 .border-transparent {
   border-color: transparent;
-}
-
-.border-brand-accent {
-  --tw-border-opacity: 1;
-  border-color: rgb(37 99 235 / var(--tw-border-opacity, 1));
 }
 
 .border-b-brand-ink {
@@ -1416,11 +1408,6 @@ input:focus,
   background-color: rgb(254 226 226 / var(--tw-bg-opacity, 1));
 }
 
-.bg-red-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
-}
-
 .bg-slate-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(241 245 249 / var(--tw-bg-opacity, 1));
@@ -1436,6 +1423,14 @@ input:focus,
   background-color: rgb(248 250 252 / var(--tw-bg-opacity, 1));
 }
 
+.bg-state-danger\/30 {
+  background-color: rgb(220 38 38 / 0.3);
+}
+
+.bg-state-warning\/30 {
+  background-color: rgb(245 158 11 / 0.3);
+}
+
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
@@ -1443,37 +1438,6 @@ input:focus,
 
 .bg-white\/60 {
   background-color: rgb(255 255 255 / 0.6);
-}
-
-.bg-yellow-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(250 204 21 / var(--tw-bg-opacity, 1));
-}
-
-.bg-state-danger {
-  --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
-}
-
-.bg-state-warning {
-  --tw-bg-opacity: 1;
-  background-color: rgb(245 158 11 / var(--tw-bg-opacity, 1));
-}
-
-.bg-state-warning\/50 {
-  background-color: rgb(245 158 11 / 0.5);
-}
-
-.bg-state-danger\/50 {
-  background-color: rgb(220 38 38 / 0.5);
-}
-
-.bg-state-danger\/30 {
-  background-color: rgb(220 38 38 / 0.3);
-}
-
-.bg-state-warning\/30 {
-  background-color: rgb(245 158 11 / 0.3);
 }
 
 .object-contain {
@@ -1639,21 +1603,12 @@ input:focus,
   color: rgb(71 85 105 / var(--tw-text-opacity, 1));
 }
 
-.text-white {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
-}
-
 .opacity-100 {
   opacity: 1;
 }
 
 .opacity-80 {
   opacity: 0.8;
-}
-
-.opacity-50 {
-  opacity: 0.5;
 }
 
 .shadow {
@@ -1701,32 +1656,22 @@ input:focus,
   border-bottom-color: rgb(226 232 240 / var(--tw-border-opacity, 1));
 }
 
-.hover\:bg-red-700:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(185 28 28 / var(--tw-bg-opacity, 1));
-}
-
 .hover\:bg-slate-50:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(248 250 252 / var(--tw-bg-opacity, 1));
 }
 
-.hover\:bg-white:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
-}
-
-.hover\:bg-yellow-500:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(234 179 8 / var(--tw-bg-opacity, 1));
+.hover\:bg-state-danger\/90:hover {
+  background-color: rgb(220 38 38 / 0.9);
 }
 
 .hover\:bg-state-warning\/90:hover {
   background-color: rgb(245 158 11 / 0.9);
 }
 
-.hover\:bg-state-danger\/90:hover {
-  background-color: rgb(220 38 38 / 0.9);
+.hover\:bg-white:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:font-semibold:hover {
@@ -1749,14 +1694,6 @@ input:focus,
 
 .hover\:opacity-100:hover {
   opacity: 1;
-}
-
-.hover\:opacity-90:hover {
-  opacity: 0.9;
-}
-
-.hover\:opacity-10:hover {
-  opacity: 0.1;
 }
 
 .hover\:shadow-lg:hover {

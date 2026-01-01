@@ -16,7 +16,7 @@ export async function registerPage({ mountEl }) {
           <h1>Register</h1>
           <p>You must register with a <strong>@stud.noroff.no</strong> email.</p>
         </div>
-        <a class="btn-secondary" href="#/">Back</a>
+        <a class="btn-secondary hover:no-underline hover:font-semibold" href="#/">← Back</a>
       </div>
 
       <form id="registerForm" class="mt-4 flex flex-col gap-3">

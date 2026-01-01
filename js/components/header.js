@@ -102,8 +102,8 @@ export function renderHeader({
         ${
           !isLoggedIn
             ? `
-              <a href="#/login" class="btn-secondary">Login</a>
-              <a href="#/register" class="btn-primary">Register</a>
+              <a href="#/login" class="btn-secondary hover:no-underline hover:font-semibold">Login</a>
+              <a href="#/register" class="btn-primary hover:no-underline hover:font-semibold">Register</a>
             `
             : `
               ${creditsBadgeHtml}

@@ -21,7 +21,7 @@ export async function loginPage({ query, mountEl }) {
       <p>Use your registered account to bid and create listings.</p>
     </div>
 
-    <a class="btn-secondary" href="#/">Back</a>
+    <a class="btn-secondary hover:no-underline hover:font-semibold" href="#/">← Back</a>
   </div>
 
   <form id="loginForm" class="mt-4 flex flex-col gap-3">

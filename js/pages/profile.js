@@ -27,7 +27,7 @@ export async function profilePage({ params, mountEl }) {
       <section class="card card-pad max-w-5xl mx-auto">
         <h1>Profile</h1>
         <p>Unable to determine which profile to show.</p>
-        <a href="#/" class="btn-secondary mt-3 inline-flex">Back</a>
+        <a href="#/" class="btn-secondary mt-3 inline-flex hover:no-underline hover:font-semibold">Back</a>
       </section>
     `;
     return;
@@ -106,7 +106,7 @@ export async function profilePage({ params, mountEl }) {
 
         <div class="mb-4 flex items-center justify-between">
           <h1>Profile</h1>
-          <a href="#/" class="btn-secondary">← Back</a>
+          <a href="#/" class="btn-secondary hover:no-underline hover:font-semibold">← Back</a>
         </div>
 
         ${
@@ -483,7 +483,7 @@ export async function profilePage({ params, mountEl }) {
       <section class="card card-pad max-w-5xl mx-auto">
         <h1>Profile</h1>
         <p>${escapeHtml(msg)}</p>
-        <a href="#/" class="btn-secondary mt-3 inline-flex">Back</a>
+        <a href="#/" class="btn-secondary mt-3 inline-flex hover:no-underline hover:font-semibold">Back</a>
       </section>
     `;
   }
