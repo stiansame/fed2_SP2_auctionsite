@@ -11,14 +11,27 @@ import {
 } from "../ui.js";
 import { listingCardHTML, bidCardHTML } from "../components/listingCard.js";
 
-export async function profilePage({ mountEl }) {
+export async function profilePage({ params, mountEl }) {
   hideFeedback();
 
   const mount = mountEl || document.getElementById("appView");
   if (!mount) return;
 
   const { user } = getAuth();
-  if (!user?.name) return;
+  const routeName = params?.name; // from /profile/:name
+  const activeName = routeName || user?.name;
+  const isSelf = !!user?.name && user.name === activeName;
+
+  if (!activeName) {
+    mount.innerHTML = `
+      <section class="card card-pad max-w-5xl mx-auto">
+        <h1>Profile</h1>
+        <p>Unable to determine which profile to show.</p>
+        <a href="#/" class="btn-secondary mt-3 inline-flex">Back</a>
+      </section>
+    `;
+    return;
+  }
 
   // Initial skeleton
   mount.innerHTML = `
@@ -31,10 +44,14 @@ export async function profilePage({ mountEl }) {
   try {
     // Fetch profile + user listings + wins + bids in parallel
     const [profileRes, listingsRes, winsRes, bidsRes] = await Promise.all([
-      apiGet(`/profiles/${user.name}`),
-      apiGet(`/profiles/${user.name}/listings`),
-      apiGet(`/profiles/${user.name}/wins`),
-      apiGet(`/profiles/${user.name}/bids`, { query: { _listings: true } }),
+      apiGet(`/profiles/${activeName}`),
+      apiGet(`/profiles/${activeName}/listings`, { query: { _bids: true } }),
+      isSelf
+        ? apiGet(`/profiles/${activeName}/wins`, { query: { _bids: true } })
+        : Promise.resolve([]),
+      isSelf
+        ? apiGet(`/profiles/${activeName}/bids`, { query: { _listings: true } })
+        : Promise.resolve([]),
     ]);
 
     const profile = profileRes?.data ?? profileRes;
@@ -63,10 +80,11 @@ export async function profilePage({ mountEl }) {
     });
 
     // Enrich bids with status (`_status`)
-    const bids = enrichBidsWithStatus(rawBids, listingMap, user.name);
+    const bids = enrichBidsWithStatus(rawBids, listingMap, activeName);
 
-    const name = profile?.name || user.name;
-    const email = profile?.email || user.email;
+    const name = profile?.name || activeName;
+    const email = profile?.email || user?.email || "";
+
     const bio = profile?.bio || "";
 
     const avatarUrl = profile?.avatar?.url || "";
@@ -77,9 +95,11 @@ export async function profilePage({ mountEl }) {
 
     const credits = typeof profile?.credits === "number" ? profile.credits : 0;
 
-    // Persist credits + sync header badge
-    setCredit(credits);
-    renderHeader({ credit: credits, avatar: profile?.avatar, name });
+    if (isSelf) {
+      // Persist credits + sync header badge only for your own profile
+      setCredit(credits);
+      renderHeader({ credit: credits, avatar: profile?.avatar, name });
+    }
 
     mount.innerHTML = `
       <section class="card card-pad max-w-5xl mx-auto">
@@ -116,6 +136,9 @@ export async function profilePage({ mountEl }) {
             </div>
 
             <!-- EDIT BUTTON OVERLAPPING AVATAR -->
+            ${
+              isSelf
+                ? `
             <button
               id="editProfileBtn"
               type="button"
@@ -136,22 +159,31 @@ export async function profilePage({ mountEl }) {
                 />
               </svg>
             </button>
+            `
+                : ""
+            }
           </div>
 
           <div>
             <h2 class="text-lg font-semibold">${escapeHtml(name)}</h2>
             <p class="text-sm text-brand-muted">${escapeHtml(email)}</p>
+            ${
+              isSelf
+                ? `
             <p class="mt-1 text-sm font-medium">
-  <span class="inline-flex items-center gap-2 h-9 px-3 rounded-full badge-accent text-sm leading-none">
-    <svg aria-hidden="true" viewBox="0 0 20 20" class="h-4 w-4">
-      <path
-        d="M3 6a2 2 0 0 1 2-2h9a1 1 0 1 1 0 2H5a1 1 0 0 0 0 2h11a1 1 0 0 1 1 1v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6zm11 4a1 1 0 1 0 0 2h3v-2h-3z"
-        fill="currentColor"
-      />
-    </svg>
-    ${credits}
-  </span>
+              <span class="inline-flex items-center gap-2 h-9 px-3 rounded-full badge-accent text-sm leading-none">
+                <svg aria-hidden="true" viewBox="0 0 20 20" class="h-4 w-4">
+                  <path
+                    d="M3 6a2 2 0 0 1 2-2h9a1 1 0 1 1 0 2H5a1 1 0 0 0 0 2h11a1 1 0 0 1 1 1v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6zm11 4a1 1 0 1 0 0 2h3v-2h-3z"
+                    fill="currentColor"
+                  />
+                </svg>
+                ${credits}
+              </span>
             </p>
+                `
+                : ""
+            }
           </div>
         </div>
 
@@ -169,13 +201,17 @@ export async function profilePage({ mountEl }) {
         <!-- TABS / FOLDERS -->
         <div class="mt-10">
           <div class="flex flex-wrap gap-2 border-b border-brand-border mb-4">
+          ${
+            isSelf
+              ? `
             <button
               type="button"
               data-tab="listings"
               class="px-3 py-1 text-sm font-medium border-b-2 border-brand-ink text-brand-ink"
             >
-              Your listings
+               Your listings
             </button>
+
             <button
               type="button"
               data-tab="wins"
@@ -191,11 +227,13 @@ export async function profilePage({ mountEl }) {
               Bid history
             </button>
           </div>
-
+           `
+              : ""
+          }
           <!-- PANEL: LISTINGS -->
           <div id="panelListings">
             <div class="flex items-center justify-between gap-2 mb-3">
-              <h2 class="text-base font-semibold">Your listings</h2>
+              <h2 class="text-base font-semibold">${isSelf ? "Your listings" : "Listings"}</h2>
             </div>
 
             ${
@@ -210,6 +248,9 @@ export async function profilePage({ mountEl }) {
           </div>
 
           <!-- PANEL: WINS -->
+          ${
+            isSelf
+              ? `
           <div id="panelWins" class="hidden">
             <h2 class="text-base font-semibold mb-3">Auctions you've won</h2>
             ${
@@ -222,8 +263,13 @@ export async function profilePage({ mountEl }) {
                 : `<p class="text-sm text-brand-muted">You haven’t won any auctions yet.</p>`
             }
           </div>
-
+    `
+              : ""
+          }
           <!-- PANEL: BIDS -->
+          ${
+            isSelf
+              ? `
           <div id="panelBids" class="hidden">
             <h2 class="text-base font-semibold mb-3">Bid history</h2>
             ${
@@ -236,6 +282,9 @@ export async function profilePage({ mountEl }) {
                 : `<p class="text-sm text-brand-muted">You haven’t placed any bids yet.</p>`
             }
           </div>
+              `
+              : ""
+          }
         </div>
       </section>
 
@@ -417,7 +466,7 @@ export async function profilePage({ mountEl }) {
 
           closeModal();
           showToast("Profile updated successfully!");
-          await profilePage({ mountEl: mount }); // re-render updated profile
+          await profilePage({ params, mountEl: mount }); // re-render updated profile
         } catch (err) {
           console.error(err);
           const msg = err?.message || "Failed to update profile visuals.";
