@@ -80,105 +80,62 @@ export async function listingPage({ params, mountEl }) {
       <section class="card card-pad">
         <div class="flex items-start justify-between gap-4">
           <div>
-                      <span class="${ended ? "badge-neutral" : "badge-warning"}">
-            ${ended ? "Ended" : "Active"}
-          </span>
+            <span class="${ended ? "badge-neutral" : "badge-warning"}">
+              ${ended ? "Ended" : "Active"}
+            </span>
           </div>
           <a href="#/" class="btn-secondary">Back</a>
         </div>
 
-
         <div class="flex flex-col gap-2 mt-4">
           <h1>${escapeHtml(title)}</h1>
-<p>
-  ${
-    sellerProfileHref
-      ? `
-      <a
-        href="${sellerProfileHref}"
-        class="inline-flex items-center gap-2 text-brand-ink font-medium"
-      >
-        ${
-          sellerAvatarUrl
-            ? `
-            <img
-              src="${sellerAvatarUrl}"
-              alt="${escapeAttr(sellerAvatarAlt)}"
-              class="h-8 w-8 rounded-full object-cover"
-              loading="lazy"
-            />
-          `
-            : ""
-        }
-        <span>${escapeHtml(sellerName)}</span>
-      </a>
-    `
-      : `
-      <span class="inline-flex items-center gap-2 text-brand-ink font-medium">
-        ${
-          sellerAvatarUrl
-            ? `
-            <img
-              src="${sellerAvatarUrl}"
-              alt="${escapeAttr(sellerAvatarAlt)}"
-              class="h-8 w-8 rounded-full object-cover"
-              loading="lazy"
-            />
-          `
-            : ""
-        }
-        <span>${escapeHtml(sellerName)}</span>
-      </span>
-    `
-  }
-</p>
-
-          <div class="mt-2 grid gap-3 sm:grid-cols-2">
-            <div class="card card-pad">
-              <h3 class="text-base">Ends</h3>
-              <p>${escapeHtml(formatTimeLeft(endsAt))}</p>
-            </div>
-            <div class="card card-pad">
-              <h3 class="text-base">Highest bid</h3>
-              <p>
-                <span class="text-brand-ink font-semibold">
-                  ${current}
-                </span>
-              </p>
-            </div>
-          </div>
-
-          ${
-            mediaItems.length
-              ? `
-                <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  ${mediaItems
-                    .map(
-                      (m) => `
-                    <div class="aspect-[16/10] overflow-hidden rounded-lg bg-slate-100">
+          <p>
+            ${
+              sellerProfileHref
+                ? `
+                <a
+                  href="${sellerProfileHref}"
+                  class="inline-flex items-center gap-2 text-brand-ink font-medium"
+                >
+                  ${
+                    sellerAvatarUrl
+                      ? `
                       <img
-                        src="${m.url}"
-                        alt="${escapeAttr(m.alt || title)}"
-                        class="h-full w-full object-cover"
+                        src="${sellerAvatarUrl}"
+                        alt="${escapeAttr(sellerAvatarAlt)}"
+                        class="h-8 w-8 rounded-full object-cover"
                         loading="lazy"
                       />
-                    </div>
-                  `,
-                    )
-                    .join("")}
-                </div>
+                    `
+                      : ""
+                  }
+                  <span>${escapeHtml(sellerName)}</span>
+                </a>
               `
-              : `
-                <div class="mt-4 rounded-lg bg-slate-50 p-4 text-sm text-brand-muted">
-                  No images provided.
-                </div>
+                : `
+                <span class="inline-flex items-center gap-2 text-brand-ink font-medium">
+                  ${
+                    sellerAvatarUrl
+                      ? `
+                      <img
+                        src="${sellerAvatarUrl}"
+                        alt="${escapeAttr(sellerAvatarAlt)}"
+                        class="h-8 w-8 rounded-full object-cover"
+                        loading="lazy"
+                      />
+                    `
+                      : ""
+                  }
+                  <span>${escapeHtml(sellerName)}</span>
+                </span>
               `
-          }
+            }
+          </p>
 
           ${
             description
               ? `
-                <div class="mt-4">
+                <div class="mt-3">
                   <h2>Description</h2>
                   <p>${escapeHtml(description)}</p>
                 </div>
@@ -186,52 +143,155 @@ export async function listingPage({ params, mountEl }) {
               : ""
           }
 
-          <div class="mt-6">
-            <h2>Bids</h2>
-            ${renderBids(bids)}
-          </div>
-
-          <div class="mt-6">
-            <h2>Place a bid</h2>
-
-            ${
-              !isLoggedIn
-                ? `
-                  <p>You must log in to place a bid.</p>
-                  <button id="goLoginBtn" class="btn-primary mt-2">
-                    Login to bid
-                  </button>
-                `
-                : isSeller
-                  ? `<p>You can’t bid on your own listing.</p>`
-                  : ended
-                    ? `<p>This auction has ended.</p>`
-                    : `
-                  <form
-                    id="bidForm"
-                    class="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end"
-                  >
-                    <div class="flex-1">
-                      <label for="bidAmount">Bid amount</label>
-                      <input
-                        id="bidAmount"
-                        type="number"
-                        min="1"
-                        step="1"
-                        placeholder="e.g. ${current + 1}"
+          <!-- MAIN LAYOUT: LEFT CAROUSEL + RIGHT INFO -->
+          <div class="mt-4 grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+            <!-- LEFT: IMAGE CAROUSEL -->
+            <div class="space-y-3">
+              ${
+                mediaItems.length
+                  ? `
+                    <div class="w-full rounded-2xl bg-slate-100 flex items-center justify-center overflow-hidden">
+                      <img
+                        id="mainListingImage"
+                        src="${mediaItems[0].url}"
+                        alt="${escapeAttr(mediaItems[0].alt || title)}"
+                        class="max-h-[28rem] w-full object-contain"
+                        loading="lazy"
                       />
-                      <small>Must be higher than ${current}.</small>
                     </div>
-                    <button class="btn-primary" type="submit">
-                      Place bid
-                    </button>
-                  </form>
-                `
-            }
+
+                    <div class="flex gap-2 overflow-x-auto pt-1">
+                      ${mediaItems
+                        .map(
+                          (m, idx) => `
+                            <button
+                              type="button"
+                              class="relative h-20 w-20 flex-shrink-0 rounded-xl overflow-hidden border-2 ${
+                                idx === 0
+                                  ? "border-brand-ink"
+                                  : "border-transparent opacity-80 hover:opacity-100"
+                              }"
+                              data-media-index="${idx}"
+                              aria-label="Show image ${idx + 1}"
+                            >
+                              <img
+                                src="${m.url}"
+                                alt="${escapeAttr(m.alt || title)}"
+                                class="h-full w-full object-cover"
+                                loading="lazy"
+                              />
+                            </button>
+                          `,
+                        )
+                        .join("")}
+                    </div>
+                  `
+                  : `
+                    <div class="rounded-2xl bg-slate-50 p-4 text-sm text-brand-muted">
+                      No images provided.
+                    </div>
+                  `
+              }
+            </div>
+
+            <!-- RIGHT: ENDS / HIGHEST BID / PLACE BID / BIDDERS -->
+            <div class="flex flex-col gap-4">
+              <div class="grid gap-3 sm:grid-cols-2">
+                <div class="card card-pad">
+                  <h3 class="text-base">Ends</h3>
+                  <p>${escapeHtml(formatTimeLeft(endsAt))}</p>
+                </div>
+                <div class="card card-pad">
+                  <h3 class="text-base">Highest bid</h3>
+                  <p>
+                    <span class="text-brand-ink font-semibold">
+                      ${current} credits
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h2>Place a bid</h2>
+                ${
+                  !isLoggedIn
+                    ? `
+                      <p>You must log in to place a bid.</p>
+                      <button id="goLoginBtn" class="btn-primary mt-2">
+                        Login to bid
+                      </button>
+                    `
+                    : isSeller
+                      ? `<p>You can’t bid on your own listing.</p>`
+                      : ended
+                        ? `<p>This auction has ended.</p>`
+                        : `
+                        <form
+                          id="bidForm"
+                          class="mt-2 flex flex-col gap-1 sm:gap-2"
+                        >
+                          <!-- Row: label + input + button -->
+                          <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
+                            <div class="flex-1">
+                              <label for="bidAmount">Bid amount</label>
+                              <input
+                                id="bidAmount"
+                                type="number"
+                                min="${current + 1}"
+                                step="1"
+                                placeholder="e.g. ${current + 1}"
+                              />
+                            </div>
+
+                            <button
+                              class="btn-primary sm:ml-3 sm:flex-shrink-0"
+                              type="submit"
+                            >
+                              Place bid
+                            </button>
+                          </div>
+
+                          <!-- Helper text sits below, no longer affects flex alignment -->
+                          <small>Must be higher than ${current} credits.</small>
+                        </form>
+
+                    `
+                }
+              </div>
+
+              <div>
+                <h2>Bidders</h2>
+                ${renderBids(bids)}
+              </div>
+            </div>
           </div>
         </div>
       </section>
     `;
+
+    // Image carousel behavior (outside of submit handler)
+    if (mediaItems.length > 0) {
+      const mainImg = mount.querySelector("#mainListingImage");
+      const thumbButtons = mount.querySelectorAll("[data-media-index]");
+
+      thumbButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.getAttribute("data-media-index") || "0");
+          const item = mediaItems[idx];
+
+          if (mainImg && item) {
+            mainImg.src = item.url;
+            mainImg.alt = item.alt || title;
+          }
+
+          // update selected border style
+          thumbButtons.forEach((b) =>
+            b.classList.remove("border-brand-ink", "opacity-100"),
+          );
+          btn.classList.add("border-brand-ink");
+        });
+      });
+    }
 
     const goLoginBtn = mount.querySelector("#goLoginBtn");
     if (goLoginBtn) {
@@ -247,7 +307,7 @@ export async function listingPage({ params, mountEl }) {
 
         const amount = Number(mount.querySelector("#bidAmount")?.value);
         if (!Number.isFinite(amount) || amount <= current) {
-          showFeedback(`Bid must be higher than ${current}.`);
+          showFeedback(`Bid must be higher than ${current} credits.`);
           return;
         }
 
@@ -299,62 +359,65 @@ function renderBids(bids) {
             .map(
               (b) => `
               <tr class="border-t border-brand-border">
-<td class="p-3">
-  ${
-    b?.bidder?.name
-      ? `
-      <a
-        href="#/profile/${encodeURIComponent(b.bidder.name)}"
-        class="flex items-center gap-2"
-      >
-        ${
-          b?.bidder?.avatar?.url
-            ? `
-            <img
-              src="${b.bidder.avatar.url}"
-              alt="${escapeAttr(
-                b.bidder.avatar.alt || b.bidder.name || "Bidder avatar",
-              )}"
-              class="h-8 w-8 rounded-full object-cover"
-              loading="lazy"
-            />
-          `
-            : `
-            <div class="h-8 w-8 rounded-full bg-slate-200"></div>
-          `
-        }
-        <span>${escapeHtml(b.bidder.name)}</span>
-      </a>
-    `
-      : `
-      <div class="flex items-center gap-2">
-        ${
-          b?.bidder?.avatar?.url
-            ? `
-            <img
-              src="${b.bidder.avatar.url}"
-              alt="${escapeAttr(b.bidder.avatar.alt || "Bidder avatar")}"
-              class="h-8 w-8 rounded-full object-cover"
-              loading="lazy"
-            />
-          `
-            : `
-            <div class="h-8 w-8 rounded-full bg-slate-200"></div>
-          `
-        }
-        <span>${escapeHtml(b?.bidder?.name ?? "—")}</span>
-      </div>
-    `
-  }
-</td>
+                <td class="p-3">
+                  ${
+                    b?.bidder?.name
+                      ? `
+                      <a
+                        href="#/profile/${encodeURIComponent(b.bidder.name)}"
+                        class="flex items-center gap-2"
+                      >
+                        ${
+                          b?.bidder?.avatar?.url
+                            ? `
+                            <img
+                              src="${b.bidder.avatar.url}"
+                              alt="${escapeAttr(
+                                b.bidder.avatar.alt ||
+                                  b.bidder.name ||
+                                  "Bidder avatar",
+                              )}"
+                              class="h-8 w-8 rounded-full object-cover"
+                              loading="lazy"
+                            />
+                          `
+                            : `
+                            <div class="h-8 w-8 rounded-full bg-slate-200"></div>
+                          `
+                        }
+                        <span>${escapeHtml(b.bidder.name)}</span>
+                      </a>
+                    `
+                      : `
+                      <div class="flex items-center gap-2">
+                        ${
+                          b?.bidder?.avatar?.url
+                            ? `
+                            <img
+                              src="${b.bidder.avatar.url}"
+                              alt="${escapeAttr(
+                                b.bidder.avatar.alt || "Bidder avatar",
+                              )}"
+                              class="h-8 w-8 rounded-full object-cover"
+                              loading="lazy"
+                            />
+                          `
+                            : `
+                            <div class="h-8 w-8 rounded-full bg-slate-200"></div>
+                          `
+                        }
+                        <span>${escapeHtml(b?.bidder?.name ?? "—")}</span>
+                      </div>
+                    `
+                  }
+                </td>
 
                 <td class="p-3 font-semibold">
-                  ${Number(b.amount || 0)}
+                  ${Number(b.amount || 0)} credits
                 </td>
                 <td class="p-3 text-brand-muted">
                   ${escapeHtml(b?.created ? timeAgo(b.created) : "")}
                 </td>
-
               </tr>
             `,
             )

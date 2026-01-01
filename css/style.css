@@ -1049,10 +1049,6 @@ input:focus,
   margin-top: 1.5rem;
 }
 
-.mt-8 {
-  margin-top: 2rem;
-}
-
 .block {
   display: block;
 }
@@ -1119,6 +1115,10 @@ input:focus,
 
 .h-full {
   height: 100%;
+}
+
+.max-h-\[28rem\] {
+  max-height: 28rem;
 }
 
 .w-1\/2 {
@@ -1235,8 +1235,26 @@ input:focus,
   gap: 1rem;
 }
 
+.gap-6 {
+  gap: 1.5rem;
+}
+
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.space-y-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
+}
+
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
 }
 
 .break-words {
@@ -1249,6 +1267,10 @@ input:focus,
 
 .rounded {
   border-radius: 0.25rem;
+}
+
+.rounded-2xl {
+  border-radius: 1rem;
 }
 
 .rounded-full {
@@ -1269,6 +1291,10 @@ input:focus,
 
 .border {
   border-width: 1px;
+}
+
+.border-2 {
+  border-width: 2px;
 }
 
 .border-b {
@@ -1385,6 +1411,11 @@ input:focus,
   background-color: rgb(255 255 255 / 0.6);
 }
 
+.object-contain {
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
@@ -1440,6 +1471,10 @@ input:focus,
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.pt-1 {
+  padding-top: 0.25rem;
 }
 
 .text-left {
@@ -1534,6 +1569,14 @@ input:focus,
   color: rgb(71 85 105 / var(--tw-text-opacity, 1));
 }
 
+.opacity-100 {
+  opacity: 1;
+}
+
+.opacity-80 {
+  opacity: 0.8;
+}
+
 .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
@@ -1592,6 +1635,10 @@ input:focus,
 .hover\:text-brand-ink:hover {
   --tw-text-opacity: 1;
   color: rgb(15 23 42 / var(--tw-text-opacity, 1));
+}
+
+.hover\:opacity-100:hover {
+  opacity: 1;
 }
 
 .hover\:shadow-lg:hover {
@@ -1708,8 +1755,16 @@ input:focus,
     top: 1rem;
   }
 
+  .sm\:ml-3 {
+    margin-left: 0.75rem;
+  }
+
   .sm\:w-auto {
     width: auto;
+  }
+
+  .sm\:flex-shrink-0 {
+    flex-shrink: 0;
   }
 
   .sm\:grid-cols-2 {
@@ -1726,6 +1781,10 @@ input:focus,
 
   .sm\:justify-between {
     justify-content: space-between;
+  }
+
+  .sm\:gap-2 {
+    gap: 0.5rem;
   }
 }
 
@@ -1754,5 +1813,9 @@ input:focus,
 
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-\[minmax\(0\2c 3fr\)_minmax\(0\2c 2fr\)\] {
+    grid-template-columns: minmax(0,3fr) minmax(0,2fr);
   }
 }
