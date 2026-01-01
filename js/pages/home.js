@@ -196,7 +196,7 @@ export async function homePage() {
         if (loadMoreBtn) {
           loadMoreBtn.classList.add("hidden");
           loadMoreBtn.disabled = false;
-          loadMoreBtn.textContent = "Load 15 more";
+          loadMoreBtn.textContent = "Load more";
         }
         setHomeViewState({
           loading: false,
@@ -216,11 +216,11 @@ export async function homePage() {
         if (hasMore) {
           loadMoreBtn.classList.remove("hidden");
           loadMoreBtn.disabled = false;
-          loadMoreBtn.textContent = "Load 15 more";
+          loadMoreBtn.textContent = "Load more";
         } else {
           loadMoreBtn.classList.add("hidden");
           loadMoreBtn.disabled = false;
-          loadMoreBtn.textContent = "Load 15 more";
+          loadMoreBtn.textContent = "Load more";
         }
       }
 
@@ -236,7 +236,7 @@ export async function homePage() {
       if (loadMoreBtn) {
         loadMoreBtn.classList.add("hidden");
         loadMoreBtn.disabled = false;
-        loadMoreBtn.textContent = "Load 15 more";
+        loadMoreBtn.textContent = "Load more";
       }
 
       setHomeViewState({ loading: false, hasResults: false, showEmpty: true });
