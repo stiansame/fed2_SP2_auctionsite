@@ -5,11 +5,12 @@ import { navigate } from "../router.js";
 import {
   showFeedback,
   hideFeedback,
-  formatEndsAt,
+  formatTimeLeft,
   isEnded,
   highestBidAmount,
   escapeHtml,
   escapeAttr,
+  timeAgo,
 } from "../ui.js";
 
 export async function listingPage({ params, mountEl }) {
@@ -91,7 +92,7 @@ export async function listingPage({ params, mountEl }) {
           <div class="mt-2 grid gap-3 sm:grid-cols-2">
             <div class="card card-pad">
               <h3 class="text-base">Ends</h3>
-              <p>${escapeHtml(formatEndsAt(endsAt))}</p>
+              <p>${escapeHtml(formatTimeLeft(endsAt))}</p>
             </div>
             <div class="card card-pad">
               <h3 class="text-base">Highest bid</h3>
