@@ -30,7 +30,7 @@ export async function profilePage({ params, mountEl }) {
       <section class="card card-pad max-w-5xl mx-auto">
         <h1>Profile</h1>
         <p>Unable to determine which profile to show.</p>
-        <a href="#/" class="btn-secondary mt-3 inline-flex hover:no-underline hover:font-semibold">Back</a>
+        <a href="#/" class="btn-secondary mt-3 inline-flex hover:no-underline hover:font-semibold">← Back</a>
       </section>
     `;
     return;
@@ -480,13 +480,17 @@ export async function profilePage({ params, mountEl }) {
     }
   } catch (err) {
     console.error(err);
+    const preMsg = "We ran into an issue - Server says:";
+    const postMsg = "You need to be registered and logged in to view profiles.";
     const msg = err?.message || "Failed to load profile.";
     showFeedback(msg);
     mount.innerHTML = `
       <section class="card card-pad max-w-5xl mx-auto">
-        <h1>Profile</h1>
-        <p>${escapeHtml(msg)}</p>
-        <a href="#/" class="btn-secondary mt-3 inline-flex hover:no-underline hover:font-semibold">Back</a>
+        <h1>Hello there.</h1>
+        <p>${escapeHtml(preMsg)}</p>
+        <p><b>${escapeHtml(msg)}</b></p>
+        <p>${escapeHtml(postMsg)}</p>
+        <a href="#/" class="btn-secondary mt-3 inline-flex hover:no-underline hover:font-semibold">← Back</a>
       </section>
     `;
   }
