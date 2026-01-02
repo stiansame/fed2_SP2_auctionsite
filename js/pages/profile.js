@@ -484,6 +484,7 @@ export async function profilePage({ params, mountEl }) {
     const postMsg = "You need to be registered and logged in to view profiles.";
     const msg = err?.message || "Failed to load profile.";
     showFeedback(msg);
+    showToast(msg, "error");
     mount.innerHTML = `
       <section class="card card-pad max-w-5xl mx-auto">
         <h1>Hello there.</h1>
