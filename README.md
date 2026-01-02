@@ -49,7 +49,7 @@ git clone https://github.com/stiansame/fed2_SP2_auctionsite.git
 - Tailwind is configured via `tailwind.config.js`.
 - To build your css, run:
   ```
-  npm run dev
+  npm run dev-css
   ```
 
 ### 🔍ESLint
@@ -82,7 +82,7 @@ git clone https://github.com/stiansame/fed2_SP2_auctionsite.git
   ```
   npm run dev
   ```
-  - To BUILD using VITE, use:
+- To BUILD using VITE, use:
   ```
   npm run build //IMPORTANT
   ```
