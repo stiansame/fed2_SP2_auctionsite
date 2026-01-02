@@ -9,7 +9,7 @@ import {
 } from "../ui.js";
 import { listingCardHTML } from "../components/listingCard.js";
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 9;
 let scrollHandlerAttached = false;
 
 export async function homePage() {

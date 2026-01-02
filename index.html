@@ -36,7 +36,7 @@
             </section>
 
             <section class="mb-6 card card-pad">
-                <form id="searchForm" class="grid gap-3 md:grid-cols-12 md:items-end" autocomplete="off">
+                <form id="searchForm" class="grid gap-3 md:grid-cols-12 md:items-start" autocomplete="off">
                     <div class="md:col-span-6">
                         <label for="searchInput">Search listings</label>
                         <div class="mt-1 flex gap-2">
@@ -116,11 +116,100 @@
     </main>
 
     <footer class="border-t bg-white">
-        <div class="container-page py-6 text-sm text-brand-muted">
-            Built for the Noroff Auction API — front-end only.<br>
-            Fed2 SP2 | Noroff TradeHub | Stian Rostad &#169; 2026
+        <div class="container-page py-10">
+
+            <!-- Footer heading -->
+            <div class="mb-8">
+                <h2 class="font-heading text-lg text-brand-ink">
+                    How it works
+                </h2>
+                <p class="mt-1 text-sm text-brand-muted">
+                    Four simple steps to get started with Noroff TradeHub.
+                </p>
+            </div>
+
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 text-sm">
+
+                <!-- 1: Register & log in -->
+                <a href="#/register"
+                    class="group block rounded-2xl border border-brand-border bg-brand-bg p-5 shadow-soft transition hover:shadow-md hover:border-brand-accent no-underline hover:no-underline focus:no-underline">
+                    <div class="flex items-start gap-3 mb-1">
+                        <!-- Icon (user) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-brand-ink flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4z" />
+                        </svg>
+                        <h3 class="font-heading text-base text-brand-ink">
+                            Register & log in
+                        </h3>
+                    </div>
+                    <p class="text-brand-muted">
+                        Create a free account to unlock bidding and listing features, then log in to manage your auctions.
+                    </p>
+                </a>
+
+                <!-- 2: Browse listings -->
+                <a href="#/"
+                    class="group block rounded-2xl border border-brand-border bg-brand-bg p-5 shadow-soft transition hover:shadow-md hover:border-brand-accent no-underline hover:no-underline focus:no-underline">
+                    <div class="flex items-start gap-3 mb-1">
+                        <!-- Icon (search) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-brand-ink flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
+                        </svg>
+                        <h3 class="font-heading text-base text-brand-ink">
+                            Browse listings
+                        </h3>
+                    </div>
+                    <p class="text-brand-muted">
+                        Search and filter auctions, view item details, images, bid history, and end times.
+                    </p>
+                </a>
+
+                <!-- 3: Place bids / create listing -->
+                <a href="#/create"
+                    class="group block rounded-2xl border border-brand-border bg-brand-bg p-5 shadow-soft transition hover:shadow-md hover:border-brand-accent no-underline hover:no-underline focus:no-underline">
+                    <div class="flex items-start gap-3 mb-1">
+                        <!-- Icon (plus in circle) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-brand-ink flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m4-4H8m12 0A8 8 0 11 4 12a8 8 0 0116 0z" />
+                        </svg>
+                        <h3 class="font-heading text-base text-brand-ink">
+                            Bid or Create
+                        </h3>
+                    </div>
+                    <p class="text-brand-muted">
+                        Bid on active auctions, or publish your own listing and start receiving offers.
+                    </p>
+                </a>
+
+                <!-- 4: Reap the rewards -->
+                <a href="#/profile"
+                    class="group block rounded-2xl border border-brand-border bg-brand-bg p-5 shadow-soft transition hover:shadow-md hover:border-brand-accent no-underline hover:no-underline focus:no-underline">
+                    <div class="flex items-start gap-3 mb-1">
+                        <!-- Icon (check) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-brand-ink flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <h3 class="font-heading text-base text-brand-ink">
+                            Reap the rewards
+                        </h3>
+                    </div>
+                    <p class="text-brand-muted">
+                        Win auctions, grow your profile, and keep track of everything in one place.
+                    </p>
+                </a>
+
+            </div>
+
+            <div class="mt-10 text-sm text-brand-muted">
+                Built for the Noroff Auction API — front-end only.<br />
+                Fed2 SP2 | Noroff TradeHub | Stian Rostad &#169; 2026
+            </div>
         </div>
     </footer>
+
+
+
+
 
     <!-- Toast container -->
     <div id="toastRoot" class="fixed z-50 flex flex-col gap-2 pointer-events-none
