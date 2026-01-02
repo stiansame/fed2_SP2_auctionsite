@@ -120,3 +120,7 @@ E2E_USER_PASSWORD=your-test-password
 ```
 
 - See [Playwright documentation](https://playwright.dev/docs/intro) for full documentation
+
+### Finally
+
+- Remember to add your .env file. See .env.example for more.

@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "unit-test": "vitest",
     "lint": "eslint .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "playwright": "npx playwright test"
   },
   "repository": {
     "type": "git",
