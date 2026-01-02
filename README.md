@@ -32,7 +32,7 @@ npm -v
 
 **CLONE**
 ```
-git clone https://github.com/stiansame/fed2-workflow-repo-ca.git
+[git clone https://github.com/stiansame/fed2_SP2_auctionsite.git
 ```
 
 **Or Download ZIP**
