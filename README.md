@@ -120,13 +120,3 @@ E2E_USER_PASSWORD=your-test-password
 ```
 
 - See [Playwright documentation](https://playwright.dev/docs/intro) for full documentation
-
-### 🌐 Live-server (Static server)
-
-- To use with playwright if you don't want to use VITE
-- Remember to configure `playwright.config.js` if you want to use
-- to run, use:
-
-```
-npm run start
-```

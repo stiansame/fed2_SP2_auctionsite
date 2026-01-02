@@ -140,3 +140,10 @@ vite.config.ts.timestamp-*
 
 # folder with old files
 **/old/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
