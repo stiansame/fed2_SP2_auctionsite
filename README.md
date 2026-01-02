@@ -110,7 +110,7 @@ git clone https://github.com/stiansame/fed2_SP2_auctionsite.git
   npx playwright test --headed //Shows actual browsers while tests are running
   npx playwright test --debug //Runs tests step by step for debugging
   ```
-- Test files are located in `js/test/playwright`. Make sure to follow playwright conventions when writing your own tests (eg `*.test.js` or `*.spec.js`)
+- Test files are located in `js/tests/e2e`. Make sure to follow playwright conventions when writing your own tests (eg `*.test.js` or `*.spec.js`)
 - Playwright uses **Enviroment variables** for tests: Add an `.env`file in your project containing:
 
 ```
