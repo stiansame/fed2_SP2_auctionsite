@@ -12,8 +12,6 @@
 - [x] **JSDOM** - A JavaScript implementation of the DOM for testing without a real browser.
 
 
-<sub>Live-server is not needed, but included for ease of use when running playwright</sub>
-
 ## Installation
 
 ### ✅ Prerequisites
@@ -32,7 +30,7 @@ npm -v
 
 **CLONE**
 ```
-[git clone https://github.com/stiansame/fed2_SP2_auctionsite.git
+git clone https://github.com/stiansame/fed2_SP2_auctionsite.git
 ```
 
 **Or Download ZIP**
@@ -49,7 +47,7 @@ npm -v
 ### 🎨Tailwind CSS
 
 - Tailwind is configured via `tailwind.config.js`.
-- To build yoyr css, run:
+- To build your css, run:
   ```
   npm run dev
   ```
@@ -82,11 +80,15 @@ npm -v
 
 - To run VITE, use:
   ```
-  npm run vite
+  npm run dev
+  ```
+  - To BUILD using VITE, use:
+  ```
+  npm run build //IMPORTANT
   ```
 - to run tests using Vitest, use:
   ```
-  npm run vitest
+  npm run unit-test
    ```
 - Add all your own tests using Vitest conventions (eg. `*test.js`)
 
