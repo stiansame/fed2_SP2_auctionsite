@@ -40,7 +40,7 @@
                     <div class="md:col-span-6">
                         <label for="searchInput">Search listings</label>
                         <div class="mt-1 flex gap-2">
-                            <input id="searchInput" name="q" type="search" placeholder="Try “camera”, “bike”, “vintage”…" />
+                            <input id="searchInput" name="q" type="search" class="w-full" placeholder="Try “camera”, “bike”, “vintage”…" />
                             <button type="submit" class="btn-primary">Search</button>
                         </div>
                         <small>Guests can browse and search. Log in to bid.</small>
@@ -48,21 +48,24 @@
 
                     <div class="md:col-span-3">
                         <label for="sortSelect">Sort</label>
-                        <select id="sortSelect" name="sort">
-                            <option value="created_desc" selected>Newest</option>
-                            <option value="ends_asc">Ending soon</option>
-                            <option value="bids_desc">Most bids</option>
-                        </select>
+                        <div class="mt-1">
+                            <select id="sortSelect" name="sort" class="w-full">
+                                <option value="created_desc" selected>Newest</option>
+                                <option value="ends_asc">Ending soon</option>
+                                <option value="bids_desc">Most bids</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="md:col-span-3">
                         <label for="statusSelect">Status</label>
-                        <select id="statusSelect" name="status">
-                            <!-- Default: Active only -->
-                            <option value="all">All</option>
-                            <option value="active" selected>Active only</option>
-                            <option value="ended">Ended</option>
-                        </select>
+                        <div class="mt-1">
+                            <select id="statusSelect" name="status" class="w-full">
+                                <option value="all">All</option>
+                                <option value="active" selected>Active only</option>
+                                <option value="ended">Ended</option>
+                            </select>
+                        </div>
                     </div>
                 </form>
             </section>

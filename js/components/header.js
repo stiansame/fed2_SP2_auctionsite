@@ -66,37 +66,68 @@ export function renderHeader({
     `
     : "";
 
-  // AVATAR LIKE IN profile.js, JUST SMALLER
-  const profileAvatarHtml = isLoggedIn
+  // AVATAR + DROPDOWN MENU
+  const profileMenuHtml = isLoggedIn
     ? `
-      <a
-        href="#/profile"
-        class="inline-flex items-center justify-center"
-        title="View profile"
-      >
-        <div class="w-9 h-9 rounded-full overflow-hidden bg-slate-200 border border-brand-border">
-          ${
-            avatarUrl
-              ? `<img
-                   src="${avatarUrl}"
-                   alt="${escapeAttr(avatarAlt)}"
-                   class="h-full w-full object-cover"
-                 />`
-              : `<div class="h-full w-full flex items-center justify-center text-xs text-brand-muted">
-                   ${displayName ? escapeAttr(displayName[0].toUpperCase()) : "?"}
-                 </div>`
-          }
+      <div class="relative inline-block text-left">
+        <button
+          type="button"
+          id="profileMenuButton"
+          class="inline-flex items-center justify-center"
+          title="Open profile menu"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <div class="w-9 h-9 rounded-full overflow-hidden bg-slate-200 border border-brand-border">
+            ${
+              avatarUrl
+                ? `<img
+                     src="${avatarUrl}"
+                     alt="${escapeAttr(avatarAlt)}"
+                     class="h-full w-full object-cover"
+                   />`
+                : `<div class="h-full w-full flex items-center justify-center text-xs text-brand-muted">
+                     ${displayName ? escapeAttr(displayName[0].toUpperCase()) : "?"}
+                   </div>`
+            }
+          </div>
+          <span class="sr-only">${escapeAttr(displayName)}</span>
+        </button>
+
+        <div
+          id="profileMenu"
+          class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black/5 z-20
+                 transform transition ease-out duration-150
+                 opacity-0 scale-95 pointer-events-none"
+          role="menu"
+          aria-labelledby="profileMenuButton"
+        >
+          <a
+            href="#/profile"
+            class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 no-underline hover:no-underline"
+            role="menuitem"
+          >
+            Profile
+          </a>
+          <button
+            type="button"
+            id="logoutBtn"
+            class="block w-full text-left px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 no-underline hover:no-underline"
+            role="menuitem"
+          >
+            Logout
+          </button>
         </div>
-        <span class="sr-only">${escapeAttr(displayName)}</span>
-      </a>
+      </div>
     `
     : "";
 
   header.innerHTML = `
     <div class="container-page py-3 flex items-center justify-between gap-3">
-      <a href="#/" class="font-heading text-lg font-semibold tracking-tight text-brand-ink">
-        Noroff TradeHub
-      </a>
+<a href="#/" class="font-heading text-lg font-semibold tracking-tight text-brand-ink no-underline hover:no-underline">
+  Noroff TradeHub
+</a>
+
 
       <nav class="flex items-center gap-2" aria-label="Primary navigation">
         ${
@@ -108,10 +139,7 @@ export function renderHeader({
             : `
               ${creditsBadgeHtml}
               ${createListingHtml}
-              ${profileAvatarHtml}
-              <button id="logoutBtn" type="button" class="btn-primary">
-                Logout
-              </button>
+              ${profileMenuHtml}
             `
         }
       </nav>
@@ -119,7 +147,62 @@ export function renderHeader({
   `;
 
   if (isLoggedIn) {
-    header.querySelector("#logoutBtn")?.addEventListener("click", () => {
+    const menuButton = header.querySelector("#profileMenuButton");
+    const menu = header.querySelector("#profileMenu");
+    const logoutBtn = header.querySelector("#logoutBtn");
+
+    let menuOpen = false;
+
+    function openMenu() {
+      if (!menu || !menuButton || menuOpen) return;
+
+      menu.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+      menu.classList.add("opacity-100", "scale-100", "pointer-events-auto");
+      menuButton.setAttribute("aria-expanded", "true");
+      menuOpen = true;
+
+      // Close on outside click / Esc
+      document.addEventListener("click", onDocumentClick);
+      document.addEventListener("keydown", onKeydown);
+    }
+
+    function closeMenu() {
+      if (!menu || !menuButton || !menuOpen) return;
+
+      menu.classList.add("opacity-0", "scale-95", "pointer-events-none");
+      menu.classList.remove("opacity-100", "scale-100", "pointer-events-auto");
+      menuButton.setAttribute("aria-expanded", "false");
+      menuOpen = false;
+
+      document.removeEventListener("click", onDocumentClick);
+      document.removeEventListener("keydown", onKeydown);
+    }
+
+    function onDocumentClick(event) {
+      if (!header.contains(event.target)) {
+        closeMenu();
+      }
+    }
+
+    function onKeydown(event) {
+      if (event.key === "Escape") {
+        closeMenu();
+        menuButton?.focus();
+      }
+    }
+
+    menuButton?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (menuOpen) closeMenu();
+      else openMenu();
+    });
+
+    // Prevent clicks inside the menu from bubbling and instantly closing it
+    menu?.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    logoutBtn?.addEventListener("click", () => {
       logout();
 
       // Re-render header as logged-out (no credit, no username)

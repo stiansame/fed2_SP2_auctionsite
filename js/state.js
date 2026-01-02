@@ -1,4 +1,7 @@
 // ./js/state.js
+
+import { apiGet } from "./api.js";
+
 const KEY = "auction_auth_v2";
 
 export function getAuth() {
@@ -38,6 +41,25 @@ export function setAuth({ token, user }) {
   );
 }
 
+export function setUser(userUpdate) {
+  const auth = getAuth();
+  if (!auth.token) return;
+
+  const nextUser = {
+    ...(auth.user || {}),
+    ...(userUpdate || {}),
+  };
+
+  localStorage.setItem(
+    KEY,
+    JSON.stringify({
+      token: auth.token,
+      user: nextUser,
+      credit: auth.credit,
+    }),
+  );
+}
+
 export function setCredit(credit) {
   const auth = getAuth();
   if (!auth.token) return;
@@ -55,11 +77,6 @@ export function logout() {
   localStorage.removeItem(KEY);
 }
 
-/**
- * Optional helper: fetch and store updated credit (depends on your API response shape)
- */
-import { apiGet } from "./api.js";
-
 export async function maybeRefreshCredit() {
   const auth = getAuth();
   if (!auth.isLoggedIn || !auth.user?.name) return null;
@@ -67,8 +84,17 @@ export async function maybeRefreshCredit() {
   try {
     const res = await apiGet(`/profiles/${auth.user.name}`);
 
-    // Swagger response: { data: { credits: number }, meta: {} }
-    const credit = res?.data?.credits ?? null;
+    // Swagger response: { data: { name, email, avatar, credits, ... }, meta: {} }
+    const profile = res?.data || {};
+
+    // Update stored user with whatever we got back (incl. avatar)
+    setUser({
+      name: profile.name ?? auth.user.name,
+      email: profile.email ?? auth.user.email,
+      avatar: profile.avatar ?? auth.user.avatar,
+    });
+
+    const credit = profile.credits ?? null;
 
     if (typeof credit === "number") {
       setCredit(credit);
