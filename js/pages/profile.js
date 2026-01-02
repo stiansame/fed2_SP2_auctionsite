@@ -9,6 +9,7 @@ import {
   escapeAttr,
   escapeHtml,
   setPageTitle,
+  setupModal,
 } from "../ui.js";
 import { listingCardHTML, bidCardHTML } from "../components/listingCard.js";
 
@@ -385,38 +386,15 @@ export async function profilePage({ params, mountEl }) {
     // ----- Modal wiring -----
     const editBtn = mount.querySelector("#editProfileBtn");
     const modal = document.getElementById("editProfileModal");
-    const modalClose = document.getElementById("editModalClose");
-    const modalCancel = document.getElementById("editModalCancel");
     const modalForm = document.getElementById("editProfileForm");
 
-    function openModal() {
-      if (!modal) return;
-      modal.classList.remove("hidden");
-    }
-
-    function closeModal() {
-      if (!modal) return;
-      modal.classList.add("hidden");
-    }
-
-    if (editBtn) editBtn.addEventListener("click", openModal);
-    if (modalClose) modalClose.addEventListener("click", closeModal);
-    if (modalCancel) modalCancel.addEventListener("click", closeModal);
-
-    // Close on backdrop click
-    if (modal) {
-      modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-          closeModal();
-        }
-      });
-    }
-
-    // ESC key closes modal
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        closeModal();
-      }
+    const modalApi = setupModal({
+      modal,
+      openButton: editBtn,
+      closeButtons: [
+        document.getElementById("editModalClose"),
+        document.getElementById("editModalCancel"),
+      ],
     });
 
     // Handle avatar + banner updates in one go
@@ -467,7 +445,7 @@ export async function profilePage({ params, mountEl }) {
 
           await apiPut(`/profiles/${name}`, payload);
 
-          closeModal();
+          modalApi.close();
           showToast("Profile updated successfully!");
           await profilePage({ params, mountEl: mount }); // re-render updated profile
         } catch (err) {

@@ -1,5 +1,5 @@
-import { getAuth } from "./state.js";
-import { navigate } from "./router.js";
+import { getAuth } from "../state.js";
+import { navigate } from "../router.js";
 
 export function onBidAttempt(listingId) {
   const { isLoggedIn } = getAuth();

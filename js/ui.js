@@ -38,13 +38,6 @@ export function setHomeViewState({
       : emptyEl.classList.add("hidden");
 }
 
-export function formatEndsAt(isoString) {
-  if (!isoString) return "";
-  const d = new Date(isoString);
-  if (Number.isNaN(d.getTime())) return isoString;
-  return d.toLocaleString();
-}
-
 export function isEnded(isoString) {
   const d = new Date(isoString);
   return Number.isFinite(d.getTime()) ? d.getTime() <= Date.now() : false;
@@ -90,12 +83,6 @@ export function showToast(
       removeToast(id);
     }, timeout);
   }
-}
-
-export function clearToasts() {
-  activeToasts = [];
-  const root = document.getElementById("toastRoot");
-  if (root) root.innerHTML = "";
 }
 
 function removeToast(id) {
@@ -215,4 +202,171 @@ export function escapeAttr(str) {
 
 export function setPageTitle(text = "Home") {
   document.title = `Noroff TradeHub | ${text}`;
+}
+// Reusable modal helper: backdrop click + Esc + open/close buttons
+export function setupModal({
+  modal,
+  openButton,
+  closeButtons = [],
+  onOpen,
+  onClose,
+} = {}) {
+  if (!modal) {
+    // Fail-safe: return no-op API if modal element is missing
+    const noop = () => {};
+    return { open: noop, close: noop, destroy: noop };
+  }
+
+  let isOpen = false;
+
+  const open = () => {
+    if (isOpen) return;
+    isOpen = true;
+    modal.classList.remove("hidden");
+    modal.setAttribute("aria-hidden", "false");
+    if (typeof onOpen === "function") onOpen();
+  };
+
+  const close = () => {
+    if (!isOpen) return;
+    isOpen = false;
+    modal.classList.add("hidden");
+    modal.setAttribute("aria-hidden", "true");
+    if (typeof onClose === "function") onClose();
+  };
+
+  const handleBackdropClick = (event) => {
+    if (event.target === modal) {
+      close();
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      close();
+    }
+  };
+
+  modal.addEventListener("click", handleBackdropClick);
+  document.addEventListener("keydown", handleKeyDown);
+
+  if (openButton) {
+    openButton.addEventListener("click", open);
+  }
+
+  closeButtons.forEach((btn) => {
+    if (!btn) return;
+    btn.addEventListener("click", close);
+  });
+
+  const destroy = () => {
+    modal.removeEventListener("click", handleBackdropClick);
+    document.removeEventListener("keydown", handleKeyDown);
+    if (openButton) {
+      openButton.removeEventListener("click", open);
+    }
+    closeButtons.forEach((btn) => {
+      if (!btn) return;
+      btn.removeEventListener("click", close);
+    });
+  };
+
+  return { open, close, destroy };
+}
+
+// Reusable media list helper: add/remove URLs + render
+export function setupMediaList({
+  listElement,
+  inputElement,
+  addButtonElement,
+  initialItems = [],
+  onChange,
+} = {}) {
+  if (!listElement) {
+    // No DOM node? Return a safe stub so code doesn't crash.
+    return {
+      getItems: () => [...initialItems],
+      setItems: () => {},
+      clear: () => {},
+      add: () => {},
+      render: () => {},
+    };
+  }
+
+  let items = Array.isArray(initialItems) ? [...initialItems] : [];
+
+  const notifyChange = () => {
+    if (typeof onChange === "function") {
+      onChange([...items]);
+    }
+  };
+
+  const render = () => {
+    if (!items.length) {
+      listElement.innerHTML =
+        '<p class="text-sm text-brand-muted">No media added.</p>';
+      return;
+    }
+
+    listElement.innerHTML = items
+      .map(
+        (url, index) => `
+          <div class="flex items-center justify-between gap-2 border border-brand-border rounded-md p-2 bg-white">
+            <span class="text-sm break-all">${escapeHtml(url)}</span>
+            <button
+              type="button"
+              class="btn-secondary hover:no-underline hover:font-semibold"
+              data-remove="${index}"
+            >
+              Remove
+            </button>
+          </div>
+        `,
+      )
+      .join("");
+
+    listElement.querySelectorAll("[data-remove]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const index = Number(button.getAttribute("data-remove"));
+        if (Number.isNaN(index)) return;
+        items.splice(index, 1);
+        render();
+        notifyChange();
+      });
+    });
+  };
+
+  const addItem = (value) => {
+    const url = String(value || "").trim();
+    if (!url) return;
+    items.push(url);
+    render();
+    notifyChange();
+  };
+
+  if (addButtonElement && inputElement) {
+    addButtonElement.addEventListener("click", () => {
+      addItem(inputElement.value);
+      inputElement.value = "";
+    });
+  }
+
+  // Initial render
+  render();
+
+  return {
+    getItems: () => [...items],
+    setItems(nextItems) {
+      items = Array.isArray(nextItems) ? [...nextItems] : [];
+      render();
+      notifyChange();
+    },
+    clear() {
+      items = [];
+      render();
+      notifyChange();
+    },
+    add: addItem,
+    render,
+  };
 }

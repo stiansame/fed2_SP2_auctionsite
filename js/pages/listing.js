@@ -13,6 +13,8 @@ import {
   timeAgo,
   showToast,
   setPageTitle,
+  setupModal,
+  setupMediaList,
 } from "../ui.js";
 
 export async function listingPage({ params, mountEl }) {
@@ -505,37 +507,26 @@ export async function listingPage({ params, mountEl }) {
       const editBtn = mount.querySelector("#editListingBtn");
       const deleteBtn = mount.querySelector("#deleteListingBtn");
       const modal = mount.querySelector("#editListingModal");
-      const modalClose = mount.querySelector("#editListingClose");
-      const modalCancel = mount.querySelector("#editListingCancel");
       const modalForm = mount.querySelector("#editListingForm");
 
       const editMediaListEl = modal?.querySelector("#editMediaList");
       const editMediaUrlEl = modal?.querySelector("#editMediaUrl");
       const editAddMediaBtn = modal?.querySelector("#editAddMediaBtn");
 
-      const mediaUrls = mediaItems.map((m) => m.url);
+      // Use setupMediaList to manage media URLs in the edit modal
+      const mediaManager = setupMediaList({
+        listElement: editMediaListEl,
+        initialItems: mediaItems.map((m) => m.url),
+      });
 
-      function openModal() {
-        if (!modal) return;
-        modal.classList.remove("hidden");
-      }
-
-      function closeModal() {
-        if (!modal) return;
-        modal.classList.add("hidden");
-      }
-
-      if (editBtn) editBtn.addEventListener("click", openModal);
-      if (modalClose) modalClose.addEventListener("click", closeModal);
-      if (modalCancel) modalCancel.addEventListener("click", closeModal);
-
-      if (modal) {
-        modal.addEventListener("click", (e) => {
-          if (e.target === modal) {
-            closeModal();
-          }
-        });
-      }
+      const modalApi = setupModal({
+        modal,
+        openButton: editBtn,
+        closeButtons: [
+          mount.querySelector("#editListingClose"),
+          mount.querySelector("#editListingCancel"),
+        ],
+      });
 
       // Delete listing
       if (deleteBtn) {
@@ -547,73 +538,29 @@ export async function listingPage({ params, mountEl }) {
 
           try {
             await apiDelete(`/listings/${id}`);
-
-            // ✅ Toast success
             showToast("Listing deleted successfully!");
-
-            // Go back to profile
             navigate("/profile");
           } catch (err) {
             console.error(err);
             const msg = err?.message || "Failed to delete listing.";
             showFeedback(msg);
-            showToast(msg, "error"); // ✅ Toast error
+            showToast(msg, "error");
           }
         });
       }
 
-      // Media list helpers
-      function renderMediaList() {
-        if (!editMediaListEl) return;
-
-        if (!mediaUrls.length) {
-          editMediaListEl.innerHTML =
-            '<p class="text-sm text-brand-muted">No media added.</p>';
-          return;
-        }
-
-        editMediaListEl.innerHTML = mediaUrls
-          .map(
-            (url, idx) => `
-            <div class="flex items-center justify-between gap-2 border border-brand-border rounded-md p-2 bg-white">
-              <span class="text-sm break-all">${escapeHtml(url)}</span>
-              <button
-                class="btn-secondary"
-                type="button"
-                data-remove="${idx}"
-              >
-                Remove
-              </button>
-            </div>
-          `,
-          )
-          .join("");
-
-        editMediaListEl.querySelectorAll("[data-remove]").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            const i = Number(btn.getAttribute("data-remove"));
-            if (Number.isFinite(i)) {
-              mediaUrls.splice(i, 1);
-              renderMediaList();
-            }
-          });
-        });
-      }
-
+      // Add media URL button (using mediaManager)
       if (editAddMediaBtn && editMediaUrlEl) {
         editAddMediaBtn.addEventListener("click", () => {
           hideFeedback();
           const url = editMediaUrlEl.value.trim();
           if (!url) return;
-          mediaUrls.push(url);
+          mediaManager.add(url);
           editMediaUrlEl.value = "";
-          renderMediaList();
         });
       }
 
-      renderMediaList();
-
-      // Edit form submit – this is where the PUT happens
+      // Edit form submit – PUT listing + close modal via helper
       if (modalForm) {
         modalForm.addEventListener("submit", async (e) => {
           e.preventDefault();
@@ -637,27 +584,25 @@ export async function listingPage({ params, mountEl }) {
             return;
           }
 
+          const currentMediaUrls = mediaManager.getItems();
+
           const payload = {
             title: newTitle,
             description: newDescription,
             endsAt: endsAtDate.toISOString(),
-            media: mediaUrls.map((url) => ({ url })),
+            media: currentMediaUrls.map((url) => ({ url })),
           };
 
           try {
             await apiPut(`/listings/${id}`, payload);
-
-            // ✅ Close modal and toast success
-            closeModal();
+            modalApi.close();
             showToast("Listing updated successfully!");
-
-            // ✅ Re-render listing with updated data
             await listingPage({ params, mountEl: mount });
           } catch (err) {
             console.error(err);
             const msg = err?.message || "Failed to update listing.";
             showFeedback(msg);
-            showToast(msg, "error"); // ✅ Toast error
+            showToast(msg, "error");
           }
         });
       }

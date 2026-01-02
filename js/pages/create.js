@@ -5,8 +5,8 @@ import {
   showFeedback,
   hideFeedback,
   showToast,
-  escapeHtml,
   setPageTitle,
+  setupMediaList,
 } from "../ui.js";
 
 export async function createListingPage({ mountEl }) {
@@ -67,41 +67,12 @@ export async function createListingPage({ mountEl }) {
   const mediaListEl = mount.querySelector("#mediaList");
   const mediaUrlEl = mount.querySelector("#mediaUrl");
   const addMediaBtn = mount.querySelector("#addMediaBtn");
-  const media = [];
 
-  function renderMedia() {
-    mediaListEl.innerHTML = media.length
-      ? media
-          .map(
-            (u, idx) => `
-              <div class="flex items-center justify-between gap-2 border border-brand-border rounded-md p-2 bg-white">
-                <span class="text-sm break-all">${escapeHtml(u)}</span>
-                <button class="btn-secondary hover:no-underline hover:font-semibold" type="button" data-remove="${idx}">Remove</button>
-              </div>
-            `,
-          )
-          .join("")
-      : `<p class="text-sm text-brand-muted">No media added.</p>`;
-
-    mediaListEl.querySelectorAll("[data-remove]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const i = Number(btn.getAttribute("data-remove"));
-        media.splice(i, 1);
-        renderMedia();
-      });
-    });
-  }
-
-  addMediaBtn.onclick = () => {
-    hideFeedback();
-    const url = mediaUrlEl.value.trim();
-    if (!url) return;
-    media.push(url);
-    mediaUrlEl.value = "";
-    renderMedia();
-  };
-
-  renderMedia();
+  const mediaManager = setupMediaList({
+    listElement: mediaListEl,
+    inputElement: mediaUrlEl,
+    addButtonElement: addMediaBtn,
+  });
 
   const form = mount.querySelector("#createForm");
   form.onsubmit = async (e) => {
@@ -125,7 +96,7 @@ export async function createListingPage({ mountEl }) {
         title,
         description,
         endsAt: endsAt.toISOString(),
-        media: media.map((url) => ({ url })),
+        media: mediaManager.getItems().map((url) => ({ url })),
       };
 
       const created = await apiPost("/listings", payload);
