@@ -3,7 +3,7 @@
 ## Tools & Tech
 
 - [x] **Tailwind CSS** - A utility-first CSS framework for quickly building modern, consistent UIs.
-- [x] **ESLint** -  A configurable linting tool that enforces JavaScript and TypeScript code quality.
+- [x] **ESLint** - A configurable linting tool that enforces JavaScript and TypeScript code quality.
 - [x] **Prettier** - An opinionated formatter that ensures consistent code style automatically.
 - [x] **Husky** - A tool for managing Git hooks to automate checks during the commit process.
 - [x] **VITE** - A fast frontend build tool with an efficient dev server and optimized builds.
@@ -11,16 +11,17 @@
 - [x] **Playwright** - A cross-browser automation framework for reliable end-to-end testing.
 - [x] **JSDOM** - A JavaScript implementation of the DOM for testing without a real browser.
 
-
 ## Installation
 
 ### ✅ Prerequisites
 
 Ensure you have the following installed:
+
 - **Node.js**
 - **npm, pnpm or yarn**
 
 Verify installation:
+
 ```
 node -v
 npm -v
@@ -29,16 +30,19 @@ npm -v
 ### 📥Get the repository
 
 **CLONE**
+
 ```
 git clone https://github.com/stiansame/fed2_SP2_auctionsite.git
 ```
 
 **Or Download ZIP**
+
 1. Open the repo on GitHub
 2. Click Code → Download ZIP
 3. Extract and open the folder in your editor
 
 **or Fork**
+
 1. Click Fork in the GitHub UI
 2. Clone your fork locally
 
@@ -56,7 +60,7 @@ git clone https://github.com/stiansame/fed2_SP2_auctionsite.git
 
 - To lint your code, you can run:
   ```
-  npx eslint .
+  npm run lint
   ```
 - ESLint will check your JS files for issues and suggest fixes
 
@@ -89,9 +93,8 @@ git clone https://github.com/stiansame/fed2_SP2_auctionsite.git
 - to run tests using Vitest, use:
   ```
   npm run unit-test
-   ```
+  ```
 - Add all your own tests using Vitest conventions (eg. `*test.js`)
-
 
 ### 🧭Playwright
 
@@ -109,11 +112,13 @@ git clone https://github.com/stiansame/fed2_SP2_auctionsite.git
   ```
 - Test files are located in `js/test/playwright`. Make sure to follow playwright conventions when writing your own tests (eg `*.test.js` or `*.spec.js`)
 - Playwright uses **Enviroment variables** for tests: Add an `.env`file in your project containing:
- ```
+
+```
 E2E_BASE_URL=http://localhost:5173
 E2E_USER_EMAIL=your-test-email@example.com
 E2E_USER_PASSWORD=your-test-password
 ```
+
 - See [Playwright documentation](https://playwright.dev/docs/intro) for full documentation
 
 ### 🌐 Live-server (Static server)
@@ -121,9 +126,7 @@ E2E_USER_PASSWORD=your-test-password
 - To use with playwright if you don't want to use VITE
 - Remember to configure `playwright.config.js` if you want to use
 - to run, use:
+
 ```
 npm run start
 ```
-
-
-
