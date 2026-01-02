@@ -1,5 +1,3 @@
-// ./js/config.js
-
 const env = import.meta.env; // Vite injects this at build time
 
 export const API_BASE_URL =

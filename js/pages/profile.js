@@ -1,4 +1,3 @@
-// ./js/pages/profile.js
 import { apiGet, apiPut } from "../api.js";
 import { getAuth, setCredit } from "../state.js";
 import { renderHeader } from "../components/header.js";
@@ -13,6 +12,13 @@ import {
 } from "../ui.js";
 import { listingCardHTML, bidCardHTML } from "../components/listingCard.js";
 
+// profilePage
+/**
+ * Renders a user profile page with listings, wins, and bids tabs.
+ * @async
+ * @param {{ params?: { name?: string }, mountEl?: HTMLElement }} param0 - Router view options and route params.
+ * @returns {Promise<void>}
+ */
 export async function profilePage({ params, mountEl }) {
   hideFeedback();
 
@@ -475,6 +481,14 @@ export async function profilePage({ params, mountEl }) {
   }
 }
 
+// enrichBidsWithStatus
+/**
+ * Enriches raw bids with a derived status flag relative to a user.
+ * @param {Array<Object>} bids - Raw bids from the API.
+ * @param {Map<string, Object>} listingMap - Map of listing id to full listing object.
+ * @param {string} userName - Name of the user whose bids are being viewed.
+ * @returns {Array<Object>} Bids with an added `_status` field.
+ */
 function enrichBidsWithStatus(bids, listingMap, userName) {
   if (!Array.isArray(bids)) return [];
 
@@ -514,6 +528,12 @@ function enrichBidsWithStatus(bids, listingMap, userName) {
   });
 }
 
+// isValidUrl
+/**
+ * Validates that a string is an HTTP or HTTPS URL.
+ * @param {string} value - URL string to validate.
+ * @returns {boolean} True if the value is a valid http(s) URL.
+ */
 function isValidUrl(value) {
   if (!value) return false;
   try {

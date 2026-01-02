@@ -1,4 +1,3 @@
-// ./js/pages/create.js
 import { apiPost } from "../api.js";
 import { navigate } from "../router.js";
 import {
@@ -9,6 +8,13 @@ import {
   setupMediaList,
 } from "../ui.js";
 
+// createListingPage
+/**
+ * Renders the create listing page and handles listing creation.
+ * @async
+ * @param {{ mountEl?: HTMLElement }} param0 - Router view options with optional mount element.
+ * @returns {Promise<void>}
+ */
 export async function createListingPage({ mountEl }) {
   hideFeedback();
 

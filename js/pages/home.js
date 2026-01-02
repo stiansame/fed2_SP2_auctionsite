@@ -1,4 +1,3 @@
-// ./js/pages/home.js
 import { apiGet } from "../api.js";
 import {
   hideFeedback,
@@ -12,6 +11,12 @@ import { listingCardHTML } from "../components/listingCard.js";
 const PAGE_SIZE = 9;
 let scrollHandlerAttached = false;
 
+// homePage
+/**
+ * Initializes the home page: search, filters, pagination, and listing grid.
+ * @async
+ * @returns {Promise<void>}
+ */
 export async function homePage() {
   hideFeedback();
 
@@ -120,6 +125,13 @@ export async function homePage() {
   // Initial load
   await loadListings({ reset: true });
 
+  // loadListings
+  /**
+   * Loads listings from the API and updates the grid and controls.
+   * @async
+   * @param {{ reset?: boolean }} [options={}] - Whether to reset the grid before loading.
+   * @returns {Promise<void>}
+   */
   async function loadListings({ reset = false } = {}) {
     hideFeedback();
 
@@ -249,6 +261,13 @@ export async function homePage() {
 }
 
 // --- Status filter helper ---
+// matchesStatus
+/**
+ * Checks if a listing matches the selected status filter.
+ * @param {Object} listing - Listing item from the API.
+ * @param {"all" | "active" | "ended"} status - Desired status filter.
+ * @returns {boolean} True if the listing matches the status.
+ */
 function matchesStatus(listing, status) {
   if (status === "all") return true;
 
@@ -265,6 +284,13 @@ function matchesStatus(listing, status) {
 }
 
 // --- Sort helpers ---
+// sortListings
+/**
+ * Sorts a list of listings according to the selected sort mode.
+ * @param {Array<Object>} list - Listings to sort.
+ * @param {"created_desc" | "ends_asc" | "bids_desc"} sortValue - Sort mode identifier.
+ * @returns {Array<Object>} New sorted array.
+ */
 function sortListings(list, sortValue) {
   if (!Array.isArray(list) || list.length === 0) return list.slice();
 
@@ -303,6 +329,12 @@ function sortListings(list, sortValue) {
   return sorted;
 }
 
+// getEndsTime
+/**
+ * Gets the end time of a listing as a comparable timestamp.
+ * @param {Object} item - Listing item.
+ * @returns {number} Milliseconds since epoch, or Infinity if missing.
+ */
 function getEndsTime(item) {
   const endsAt = item?.endsAt || item?.ends_at || item?.deadline;
   const d = endsAt ? new Date(endsAt) : null;
@@ -310,6 +342,12 @@ function getEndsTime(item) {
   return t;
 }
 
+// getCreatedTime
+/**
+ * Gets the creation time of a listing as a comparable timestamp.
+ * @param {Object} item - Listing item.
+ * @returns {number} Milliseconds since epoch, or 0 if missing.
+ */
 function getCreatedTime(item) {
   const created = item?.created || item?.createdAt;
   const d = created ? new Date(created) : null;
@@ -317,6 +355,12 @@ function getCreatedTime(item) {
   return t;
 }
 
+// getBidsCount
+/**
+ * Returns the number of bids on a listing using count or bids array.
+ * @param {Object} item - Listing item.
+ * @returns {number} Number of bids.
+ */
 function getBidsCount(item) {
   const fromCount =
     item && item._count && typeof item._count.bids === "number"
@@ -330,6 +374,12 @@ function getBidsCount(item) {
 }
 
 // --- API sort hint (safe keys only) ---
+// mapSort
+/**
+ * Maps a UI sort value to API sort key and order.
+ * @param {"created_desc" | "ends_asc" | "bids_desc"} value - Selected sort value.
+ * @returns {{ sortKey: string, sortOrder: "asc" | "desc" }} API sort hint.
+ */
 function mapSort(value) {
   switch (value) {
     case "ends_asc":

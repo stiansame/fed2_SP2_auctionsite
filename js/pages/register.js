@@ -1,8 +1,14 @@
-// ./js/pages/register.js
 import { apiPost } from "../api.js";
 import { navigate } from "../router.js";
 import { showFeedback, hideFeedback, showToast, setPageTitle } from "../ui.js";
 
+// registerPage
+/**
+ * Renders the registration page and handles account creation.
+ * @async
+ * @param {{ mountEl?: HTMLElement }} param0 - Router view options with optional mount element.
+ * @returns {Promise<void>}
+ */
 export async function registerPage({ mountEl }) {
   hideFeedback();
 
@@ -58,14 +64,14 @@ export async function registerPage({ mountEl }) {
     if (!email.endsWith("@stud.noroff.no")) {
       const msg = "Email must end with @stud.noroff.no";
       showFeedback(msg);
-      showToast(msg, "error"); // ✅ toast for validation error
+      showToast(msg, "error"); // toast for validation error
       return;
     }
 
     try {
       await apiPost("/auth/register", { name, email, password });
 
-      // ✅ toast on success
+      //  toast on success
       showToast("Account created successfully! You can now log in.");
 
       navigate("/login");
@@ -73,7 +79,7 @@ export async function registerPage({ mountEl }) {
       console.error(err);
       const msg = err?.message || "Registration failed.";
       showFeedback(msg);
-      showToast(msg, "error"); // ✅ toast on error
+      showToast(msg, "error"); // toast on error
     }
   };
 }

@@ -1,15 +1,33 @@
-// ./js/router.js
 import { getAuth } from "./state.js";
 
+// navigate
+/**
+ * Updates the URL hash to navigate to a new route.
+ * @param {string} path - Application route path (e.g. "/login").
+ * @returns {void}
+ */
 export function navigate(path) {
   window.location.hash = `#${path}`;
 }
 
+// parseQuery
+/**
+ * Parses a URL query string into a plain object.
+ * @param {string} [queryString] - Query string without the leading "?".
+ * @returns {Object<string, string>} Parsed query parameters.
+ */
 function parseQuery(queryString) {
   const params = new URLSearchParams(queryString || "");
   return Object.fromEntries(params.entries());
 }
 
+// matchRoute
+/**
+ * Matches a path against a route pattern and extracts route params.
+ * @param {string} path - Actual path from the URL.
+ * @param {string} routePath - Route pattern (e.g. "/listing/:id").
+ * @returns {Object<string, string> | null} Params object if matched, otherwise null.
+ */
 function matchRoute(path, routePath) {
   const pathParts = path.split("/").filter(Boolean);
   const routeParts = routePath.split("/").filter(Boolean);
@@ -25,6 +43,12 @@ function matchRoute(path, routePath) {
   return params;
 }
 
+// setView
+/**
+ * Toggles between the home view and app view wrappers.
+ * @param {string} path - Current route path.
+ * @returns {{ mountEl: HTMLElement | null }} Mount element for route content.
+ */
 function setView(path) {
   const homeView = document.getElementById("homeView");
   const appView = document.getElementById("appView");
@@ -47,6 +71,12 @@ function setView(path) {
   return { mountEl: appView };
 }
 
+// createRouter
+/**
+ * Sets up the hash-based router and route handling.
+ * @param {Array<{ path: string, view: Function, protected?: boolean }>} routes - Route configuration list.
+ * @returns {void}
+ */
 export function createRouter(routes) {
   async function handleRoute() {
     const hash = window.location.hash || "#/";

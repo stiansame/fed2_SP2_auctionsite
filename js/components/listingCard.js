@@ -8,10 +8,22 @@ import {
   escapeAttr,
 } from "../ui.js";
 
+// safeImg
+/**
+ * Normalizes an image URL value to a safe string.
+ * @param {unknown} url - Potential image URL value.
+ * @returns {string} Valid URL string or an empty string.
+ */
 function safeImg(url) {
   return url && typeof url === "string" ? url : "";
 }
 
+// listingCardHTML
+/**
+ * Builds a listing card HTML string for use in grids and lists.
+ * @param {Object} listing - Listing object returned from the API.
+ * @returns {string} HTML string for the listing card anchor.
+ */
 export function listingCardHTML(listing) {
   const id = listing?.id;
   const title = listing?.title ?? "Untitled";
@@ -83,6 +95,12 @@ export function listingCardHTML(listing) {
   `;
 }
 
+// bidCardHTML
+/**
+ * Builds a bid history card HTML string for a single bid.
+ * @param {Object} bid - Bid object enriched with listing and status info.
+ * @returns {string} HTML string for the bid card.
+ */
 export function bidCardHTML(bid) {
   const amount = Number(bid?.amount || 0);
   const created = bid?.created || null;

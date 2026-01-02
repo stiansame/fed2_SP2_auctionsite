@@ -1,8 +1,13 @@
-// ./js/components/header.js
 import { getAuth, logout } from "../state.js";
 import { navigate } from "../router.js";
 import { escapeAttr } from "../ui.js";
 
+// renderHeader
+/**
+ * Renders the site header with auth-aware navigation and credit badge.
+ * @param {{ credit?: number | null, avatar?: { url?: string, alt?: string } | null, name?: string | null }} [options={}] - Header render options.
+ * @returns {void}
+ */
 export function renderHeader({
   credit = null,
   avatar = null,

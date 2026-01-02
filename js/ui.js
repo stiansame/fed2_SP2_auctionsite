@@ -1,5 +1,9 @@
-// ./js/ui.js
-
+// showFeedback
+/**
+ * Displays a feedback message in the global feedback area.
+ * @param {string} message - Message to show to the user.
+ * @returns {void}
+ */
 export function showFeedback(message) {
   const box = document.getElementById("feedback");
   const text = document.getElementById("feedbackText");
@@ -9,12 +13,23 @@ export function showFeedback(message) {
   box.classList.remove("hidden");
 }
 
+// hideFeedback
+/**
+ * Hides the global feedback area if it is visible.
+ * @returns {void}
+ */
 export function hideFeedback() {
   const box = document.getElementById("feedback");
   if (!box) return;
   box.classList.add("hidden");
 }
 
+// setHomeViewState
+/**
+ * Toggles loading, results, and empty-state elements on the home view.
+ * @param {{ loading?: boolean, hasResults?: boolean, showEmpty?: boolean }} state - Home view state flags.
+ * @returns {void}
+ */
 export function setHomeViewState({
   loading = false,
   hasResults = true,
@@ -38,11 +53,23 @@ export function setHomeViewState({
       : emptyEl.classList.add("hidden");
 }
 
+// isEnded
+/**
+ * Determines whether a given ISO date has already passed.
+ * @param {string} isoString - ISO 8601 datetime string.
+ * @returns {boolean} True if the date is in the past or invalid.
+ */
 export function isEnded(isoString) {
   const d = new Date(isoString);
   return Number.isFinite(d.getTime()) ? d.getTime() <= Date.now() : false;
 }
 
+// highestBidAmount
+/**
+ * Returns the highest bid amount from a listing-like object.
+ * @param {{ bids?: Array<{ amount: number }>, _bids?: Array<{ amount: number }> }} listing - Listing with bids.
+ * @returns {number} Highest bid amount, or 0 if there are no bids.
+ */
 export function highestBidAmount(listing) {
   const bids = listing?.bids || listing?._bids || [];
   if (!Array.isArray(bids) || bids.length === 0) return 0;
@@ -54,6 +81,14 @@ export function highestBidAmount(listing) {
 let toastIdCounter = 0;
 let activeToasts = [];
 
+// showToast
+/**
+ * Shows a transient toast notification.
+ * @param {string} [message="Success!"] - Toast message text.
+ * @param {"success" | "error"} [type="success"] - Toast type for styling.
+ * @param {number} [timeout=3000] - Auto-dismiss timeout in milliseconds.
+ * @returns {void}
+ */
 export function showToast(
   message = "Success!",
   type = "success",
@@ -128,6 +163,12 @@ function renderToasts(root) {
   });
 }
 
+// escapeHtml
+/**
+ * Escapes a string for safe insertion into HTML content.
+ * @param {string} str - Raw string value.
+ * @returns {string} Escaped HTML-safe string.
+ */
 export function escapeHtml(str) {
   return String(str ?? "")
     .replaceAll("&", "&amp;")
@@ -137,7 +178,12 @@ export function escapeHtml(str) {
     .replaceAll("'", "&#039;");
 }
 
-// Function to display time ago
+// timeAgo
+/**
+ * Formats an ISO datetime as a human-readable "time ago" string.
+ * @param {string} isoString - ISO 8601 datetime string.
+ * @returns {string} Human-friendly relative time label.
+ */
 export function timeAgo(isoString) {
   try {
     const then = new Date(isoString).getTime();
@@ -167,7 +213,12 @@ export function timeAgo(isoString) {
   }
 }
 
-//Function to display time left
+// formatTimeLeft
+/**
+ * Formats the remaining time until an end date as a short label.
+ * @param {string} endsAt - ISO 8601 end datetime string.
+ * @returns {string} Remaining time label, or "Ended" if already passed.
+ */
 export function formatTimeLeft(endsAt) {
   if (!endsAt) return "";
 
@@ -196,14 +247,33 @@ export function formatTimeLeft(endsAt) {
   return `${minutes}m`;
 }
 
+// escapeAttr
+/**
+ * Escapes a string for safe use inside HTML attributes.
+ * @param {string} str - Raw attribute value.
+ * @returns {string} Escaped attribute-safe value.
+ */
 export function escapeAttr(str) {
   return escapeHtml(str).replaceAll("\n", "");
 }
 
+// setPageTitle
+/**
+ * Sets the document title with the Noroff TradeHub prefix.
+ * @param {string} [text="Home"] - Page-specific title segment.
+ * @returns {void}
+ */
 export function setPageTitle(text = "Home") {
   document.title = `Noroff TradeHub | ${text}`;
 }
+
 // Reusable modal helper: backdrop click + Esc + open/close buttons
+// setupModal
+/**
+ * Wires up a modal element with open/close behavior and returns a small API.
+ * @param {{ modal?: HTMLElement | null, openButton?: HTMLElement | null, closeButtons?: HTMLElement[], onOpen?: Function, onClose?: Function }} [options={}] - Modal configuration.
+ * @returns {{ open: Function, close: Function, destroy: Function }} Modal control API.
+ */
 export function setupModal({
   modal,
   openButton,
@@ -275,6 +345,12 @@ export function setupModal({
 }
 
 // Reusable media list helper: add/remove URLs + render
+// setupMediaList
+/**
+ * Manages a dynamic list of media URLs and keeps the DOM in sync.
+ * @param {{ listElement?: HTMLElement | null, inputElement?: HTMLInputElement | null, addButtonElement?: HTMLElement | null, initialItems?: string[], onChange?: Function }} options - Media list configuration.
+ * @returns {{ getItems: () => string[], setItems: (items: string[]) => void, clear: () => void, add: (url: string) => void, render: () => void }} Media list API.
+ */
 export function setupMediaList({
   listElement,
   inputElement,

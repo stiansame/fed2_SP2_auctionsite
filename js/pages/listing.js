@@ -1,4 +1,3 @@
-// ./js/pages/listing.js
 import { apiGet, apiPost, apiPut, apiDelete } from "../api.js";
 import { getAuth, maybeRefreshCredit } from "../state.js";
 import { navigate } from "../router.js";
@@ -17,6 +16,13 @@ import {
   setupMediaList,
 } from "../ui.js";
 
+// listingPage
+/**
+ * Renders a single listing page, including bids, media, and actions.
+ * @async
+ * @param {{ params?: { id?: string }, mountEl?: HTMLElement }} param0 - Router view options and route params.
+ * @returns {Promise<void>}
+ */
 export async function listingPage({ params, mountEl }) {
   hideFeedback();
 
@@ -621,7 +627,12 @@ export async function listingPage({ params, mountEl }) {
     `;
   }
 }
-
+// toLocalDateTimeValue
+/**
+ * Converts an ISO date string into a local datetime-local input value.
+ * @param {string | null} iso - ISO 8601 datetime string.
+ * @returns {string} Local datetime string in "YYYY-MM-DDTHH:mm" format, or empty string.
+ */
 function toLocalDateTimeValue(iso) {
   if (!iso) return "";
   const d = new Date(iso);
@@ -635,6 +646,12 @@ function toLocalDateTimeValue(iso) {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
+// renderBids
+/**
+ * Renders a table of bids for a listing as an HTML string.
+ * @param {Array<Object>} [bids=[]] - Bids array from the API.
+ * @returns {string} HTML string representing the bids table or an empty state.
+ */
 function renderBids(bids = []) {
   if (!Array.isArray(bids) || bids.length === 0) {
     return `<p class="text-sm text-brand-muted">No bids yet.</p>`;
