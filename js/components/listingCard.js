@@ -77,7 +77,7 @@ export function listingCardHTML(listing) {
           ? `
         <div class="mt-2 flex items-center justify-between">
           <span class="text-sm text-brand-muted">Highest bid</span>
-          <span class="text-sm font-semibold text-brand-ink">${current}</span>
+          <span class="text-sm font-semibold text-brand-ink">${current} credits</span>
         </div>
         `
           : `
