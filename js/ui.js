@@ -385,20 +385,45 @@ export function setupMediaList({
     }
 
     listElement.innerHTML = items
-      .map(
-        (url, index) => `
-          <div class="flex items-center justify-between gap-2 border border-brand-border rounded-md p-2 bg-white">
-            <span class="text-sm break-all">${escapeHtml(url)}</span>
-            <button
-              type="button"
-              class="btn-secondary hover:no-underline hover:font-semibold"
-              data-remove="${index}"
-            >
-              Remove
-            </button>
+      .map((url, index) => {
+        const filename = String(url).split("/").pop().split("?")[0];
+
+        return `
+<div class="flex items-center gap-3 border border-brand-border rounded-md p-2 bg-white">
+  <img
+    src="${escapeAttr(url)}"
+    alt="Media thumbnail"
+    class="w-10 h-10 rounded object-cover bg-slate-200 flex-shrink-0"
+  />
+
+<button
+  type="button"
+  class="ml-auto btn-secondary border-state-danger bg-state-danger/30 text-state-danger hover:bg-state-danger/90 hover:text-white hover:no-underline focus:no-underline flex items-center justify-center"
+  data-remove="${index}"
+  aria-label="Remove media"
+  title="Remove media"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    class="h-4 w-4"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+    <path d="M10 11v6" />
+    <path d="M14 11v6" />
+    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+  </svg>
+</button>
+
           </div>
-        `,
-      )
+        `;
+      })
       .join("");
 
     listElement.querySelectorAll("[data-remove]").forEach((button) => {

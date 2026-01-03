@@ -44,11 +44,12 @@ export async function createListingPage({ mountEl }) {
           <textarea id="description" rows="4" placeholder="Condition, pickup, etc."></textarea>
         </div>
 
-        <div>
+        <div class="flex flex-col gap-1">
           <label for="endsAt">Deadline</label>
-          <input id="endsAt" type="datetime-local" required />
+          <input id="endsAt" type="datetime-local" required class="w-full" />
           <small>Must be in the future.</small>
         </div>
+
 
         <div class="card card-pad">
           <h2>Media URLs</h2>
