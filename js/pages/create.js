@@ -48,7 +48,7 @@ export async function createListingPage({ mountEl }) {
         <div class="flex flex-col gap-1">
           <label for="endsAt">Deadline</label>
 
-          <div class="w-1/2 max-w-full overflow-x-auto rounded">
+          <div class="w-1/2 max-w-full rounded">
             <input
               id="endsAt"
               type="datetime-local"
