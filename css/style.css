@@ -1344,6 +1344,10 @@ input:focus,
   width: 1rem;
 }
 
+.w-4\/5 {
+  width: 80%;
+}
+
 .w-40 {
   width: 10rem;
 }
@@ -1397,6 +1401,10 @@ input:focus,
 }
 
 .flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.shrink-0 {
   flex-shrink: 0;
 }
 

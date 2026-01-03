@@ -384,14 +384,16 @@ export async function listingPage({ params, mountEl }) {
                 >${escapeHtml(description)}</textarea>
               </div>
 
-                <div>
+                <div class="flex flex-col gap-1">
                   <label for="editEndsAt">Deadline</label>
+                  <div class="w-1/2 max-w-full overflow-x-auto rounded">
                   <input
                     id="editEndsAt"
                     type="datetime-local"
                     value="${escapeAttr(endsAtLocal)}"
                     disabled
                   />
+                  </div>
                   <small>This deadline can't be changed after the listing is created.</small>
                 </div>
 

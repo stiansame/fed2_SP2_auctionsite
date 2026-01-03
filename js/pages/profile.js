@@ -9,6 +9,7 @@ import {
   escapeHtml,
   setPageTitle,
   setupModal,
+  setupMediaList,
 } from "../ui.js";
 import { listingCardHTML, bidCardHTML } from "../components/listingCard.js";
 
@@ -322,16 +323,27 @@ export async function profilePage({ params, mountEl }) {
 
           <form id="editProfileForm" class="flex flex-col gap-4">
             <div>
-              <label for="modalAvatarUrl">Avatar URL</label>
-              <input
-                id="modalAvatarUrl"
-                type="url"
-                placeholder="https://example.com/avatar.jpg"
-                value="${escapeAttr(avatarUrl)}"
-              />
+              <label for="modalAvatarInput">Avatar URL</label>
+              <div class="flex gap-2">
+                <input
+                  id="modalAvatarInput"
+                  type="url"
+                  placeholder="https://example.com/avatar.jpg"
+                  class="flex-1"
+                />
+                <button
+                  type="button"
+                  id="modalAvatarAddBtn"
+                  class="btn-secondary shrink-0"
+                >
+                  Add
+                </button>
+              </div>
+
+              <div id="modalAvatarList" class="mt-2 flex flex-col gap-2"></div>
+
               <small>Recommended: square image, will be shown as a circle.</small>
             </div>
-
             <div>
               <label for="modalBannerUrl">Banner URL</label>
               <input
@@ -394,6 +406,18 @@ export async function profilePage({ params, mountEl }) {
     const modal = document.getElementById("editProfileModal");
     const modalForm = document.getElementById("editProfileForm");
 
+    // Avatar media list (using setupMediaList)
+    const avatarListEl = modal?.querySelector("#modalAvatarList");
+    const avatarInputEl = modal?.querySelector("#modalAvatarInput");
+    const avatarAddBtn = modal?.querySelector("#modalAvatarAddBtn");
+
+    const avatarMedia = setupMediaList({
+      listElement: avatarListEl,
+      inputElement: avatarInputEl,
+      addButtonElement: avatarAddBtn,
+      initialItems: avatarUrl ? [avatarUrl] : [],
+    });
+
     const modalApi = setupModal({
       modal,
       openButton: editBtn,
@@ -409,12 +433,21 @@ export async function profilePage({ params, mountEl }) {
         e.preventDefault();
         hideFeedback();
 
-        const newAvatar = modal.querySelector("#modalAvatarUrl").value.trim();
+        const avatarItems =
+          typeof avatarMedia?.getItems === "function"
+            ? avatarMedia
+                .getItems()
+                .map((v) => String(v || "").trim())
+                .filter(Boolean)
+            : [];
+
+        const newAvatar = avatarItems[0] || "";
         const newBanner = modal.querySelector("#modalBannerUrl").value.trim();
 
         if (!newAvatar && !newBanner) {
-          showFeedback("Please enter at least one URL to update.");
-          showToast("Please enter at least one URL to update.", "error");
+          const msg = "Please enter at least one URL to update.";
+          showFeedback(msg);
+          showToast(msg, "error");
           return;
         }
 
