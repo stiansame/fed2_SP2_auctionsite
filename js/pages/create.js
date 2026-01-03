@@ -24,14 +24,18 @@ export async function createListingPage({ mountEl }) {
   if (!mount) return;
 
   mount.innerHTML = `
-    <section class="card card-pad max-w-2xl mx-auto">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h1>Create listing</h1>
-          <p>Create an auction with a title, description, media URLs, and a deadline.</p>
-        </div>
-        <a class="btn-secondary hover:no-underline hover:font-semibold" href="#/">← Back</a>
-      </div>
+  <section class="card card-pad max-w-2xl mx-auto">
+    <div class="flex items-start justify-between gap-4">
+      <h1>Create listing</h1>
+      <a
+        class="btn-secondary hover:no-underline hover:font-semibold"
+        href="#/">← Back</a>
+    </div>
+    <div class="mt-1">
+      <p>
+        Create an auction with a title, description, media URLs, and a deadline.
+      </p>
+    </div>
 
       <form id="createForm" class="mt-4 flex flex-col gap-4 min-w-0">
 
