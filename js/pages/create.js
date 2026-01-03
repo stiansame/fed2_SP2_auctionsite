@@ -33,7 +33,8 @@ export async function createListingPage({ mountEl }) {
         <a class="btn-secondary hover:no-underline hover:font-semibold" href="#/">← Back</a>
       </div>
 
-      <form id="createForm" class="mt-4 flex flex-col gap-4">
+      <form id="createForm" class="mt-4 flex flex-col gap-4 min-w-0">
+
         <div>
           <label for="title">Title</label>
           <input id="title" type="text" required placeholder="Vintage camera" />
@@ -44,11 +45,17 @@ export async function createListingPage({ mountEl }) {
           <textarea id="description" rows="4" placeholder="Condition, pickup, etc."></textarea>
         </div>
 
-        <div class="flex flex-col gap-1">
-          <label for="endsAt">Deadline</label>
-          <input id="endsAt" type="datetime-local" required class="w-full" />
-          <small>Must be in the future.</small>
-        </div>
+<div class="flex flex-col gap-1 min-w-0">
+  <label for="endsAt">Deadline</label>
+  <input
+    id="endsAt"
+    type="datetime-local"
+    required
+    class="block w-full max-w-full min-w-0"
+  />
+  <small class="text-xs text-brand-muted">Must be in the future.</small>
+</div>
+
 
 
         <div class="card card-pad">

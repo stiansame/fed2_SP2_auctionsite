@@ -386,8 +386,6 @@ export function setupMediaList({
 
     listElement.innerHTML = items
       .map((url, index) => {
-        const filename = String(url).split("/").pop().split("?")[0];
-
         return `
 <div class="flex items-center gap-3 border border-brand-border rounded-md p-2 bg-white">
   <img
