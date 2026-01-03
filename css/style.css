@@ -558,6 +558,13 @@ html {
   font-family: Roboto, Inter, system-ui, Segoe UI, Arial, sans-serif;
   background-color: #F8FAFC;
   color: #0F172A;
+  font-size: 13px;
+}
+
+@media (min-width:640px) {
+  html {
+    font-size: 16px;
+  }
 }
 
 body {
@@ -611,10 +618,6 @@ small {
 a {
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity, 1));
-}
-
-a:hover {
-  text-decoration-line: underline;
 }
 
 /* Form defaults */
@@ -1363,6 +1366,10 @@ input:focus,
 
 .min-w-0 {
   min-width: 0px;
+}
+
+.min-w-\[260px\] {
+  min-width: 260px;
 }
 
 .max-w-2xl {

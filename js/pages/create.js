@@ -45,16 +45,22 @@ export async function createListingPage({ mountEl }) {
           <textarea id="description" rows="4" placeholder="Condition, pickup, etc."></textarea>
         </div>
 
-<div class="flex flex-col gap-1 min-w-0">
-  <label for="endsAt">Deadline</label>
-  <input
-    id="endsAt"
-    type="datetime-local"
-    required
-    class="block w-full max-w-full min-w-0"
-  />
-  <small class="text-xs text-brand-muted">Must be in the future.</small>
-</div>
+          <div class="flex flex-col gap-1">
+            <label for="endsAt">Deadline</label>
+
+            <!-- This wrapper keeps the wide iOS control from breaking the layout -->
+            <div class="overflow-x-auto">
+              <input
+                id="endsAt"
+                type="datetime-local"
+                required
+                class="min-w-[260px] max-w-full"
+              />
+            </div>
+
+            <small class="text-xs text-brand-muted">Must be in the future.</small>
+          </div>
+
 
 
 
